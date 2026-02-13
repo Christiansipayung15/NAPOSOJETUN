@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NHKBP JETUN KABIL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4318FF;
+            --primary-hover: #3311CC;
+            --text-dark: #1B2559;
+            --text-gray: #707EAE;
+            --white: #ffffff;
+            --bg-gradient: linear-gradient(-45deg, #f4f7fe, #e9efff, #dee8ff, #f4f7fe);
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Decorative Circles */
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--primary);
+            opacity: 0.1;
+            z-index: -1;
+            filter: blur(50px);
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 45px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0px 25px 80px rgba(0, 0, 0, 0.08);
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .login-container h2 {
+            color: var(--text-dark);
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .login-container p {
+            color: var(--text-gray);
+            margin-bottom: 35px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            margin-left: 4px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 16px;
+            border: 1px solid #E0E5F2;
+            background: var(--white);
+            outline: none;
+            transition: 0.3s all ease;
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+
+        .form-group input::placeholder {
+            color: #A3AED0;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 5px rgba(67, 24, 255, 0.15);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 15px;
+            box-shadow: 0px 10px 25px rgba(67, 24, 255, 0.25);
+        }
+
+        .btn-login:hover {
+            background: var(--primary-hover);
+            transform: scale(1.02);
+            box-shadow: 0px 15px 30px rgba(67, 24, 255, 0.35);
+        }
+
+        .btn-login:active {
+            transform: scale(0.98);
+        }
+
+        .error-msg {
+            background: #FFF5F4;
+            color: #EE5D50;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin-top: 20px;
+            font-weight: 600;
+            display: none;
+            border: 1px solid #FFDBDA;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .created-by {
+            margin-top: 35px;
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            border-top: 1px solid #F4F7FE;
+            padding-top: 20px;
+        }
+
+        .created-by strong {
+            color: var(--primary);
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="circle" style="width: 300px; height: 300px; top: -100px; left: -100px;"></div>
+    <div class="circle" style="width: 400px; height: 400px; bottom: -150px; right: -150px; background: #5e35b1;"></div>
+
+    <div class="login-container">
+        <h2>Login</h2>
+        <p>Masukkan Username dan Password!</p>
+        
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="username" placeholder="Masukkan Username">
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Masukkan Password">
+        </div>
+
+        <button class="btn-login" onclick="prosesLogin()">Masuk Sekarang</button>
+        
+        <div id="error-text" class="error-msg">Maaf Username/Password salah!</div>
+
+        <div class="created-by">
+            Website by <strong>CHRISTIAN SIPAYUNG</strong>
+        </div>
+    </div>
+
+    <script>
+        function prosesLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const errorText = document.getElementById('error-text');
+
+            // Akun Default
+            const adminUser = "naposojetun";
+            const adminPass = "jetunkabil";
+
+            if (user === adminUser && pass === adminPass) {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                window.location.href = 'Dashboard.html'; 
+            } else {
+                errorText.style.display = 'block';
+                const container = document.querySelector('.login-container');
+                container.style.transform = 'translateX(10px)';
+                setTimeout(() => container.style.transform = 'translateX(-10px)', 50);
+                setTimeout(() => container.style.transform = 'translateX(0)', 100);
+            }
+        }
+
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                prosesLogin();
+            }
+        });
+    </script>
+</body>
+</html>

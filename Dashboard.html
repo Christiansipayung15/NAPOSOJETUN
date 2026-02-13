@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NHKBP JETUN KABIL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #5d51a6;
+            --dark: #2c3136;
+            --sidebar-hover: #374850;
+            --light-bg: #f4f7fa;
+            --success: #00a65a;
+            --danger: #dd4b39;
+            --info: #00c0ef;
+            --warning: #f39c12;
+            --glow-color: #ffeb3b; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--light-bg); display: flex; min-height: 100vh; }
+
+        /* --- Header --- */
+        .top-header {
+            background: var(--primary); color: white; height: 60px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; position: fixed; width: 100%; z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Styling Profil Samping Judul */
+        .user-header-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-left: 15px;
+            border-left: 1px solid rgba(255,255,255,0.2);
+            margin-left: 5px;
+        }
+
+        .user-header-profile img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid #fff;
+            object-fit: cover;
+        }
+
+        .user-header-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .user-header-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .user-header-status {
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #d1d1d1;
+        }
+
+        .dot-online {
+            width: 7px;
+            height: 7px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+        }
+
+        .header-right { text-align: right; }
+
+        /* --- Sidebar --- */
+        .sidebar { width: 240px; background: var(--dark); height: 100vh; position: fixed; top: 60px; left: 0; }
+        .sidebar-menu { list-style: none; padding-top: 20px; }
+        .sidebar-menu li {
+            padding: 15px 20px; color: #b8c7ce; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; border-left: 3px solid transparent;
+        }
+        .sidebar-menu li.active { background: var(--sidebar-hover); color: white; border-left-color: var(--primary); }
+        .sidebar-menu li i { margin-right: 12px; width: 20px; text-align: center; }
+
+        /* --- Content Area --- */
+        .main-content { margin-left: 240px; margin-top: 60px; padding: 30px; width: calc(100% - 240px); }
+        .content-section { display: none; animation: fadeIn 0.4s; }
+        .content-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- Stats & Tables --- */
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .info-box { background: white; display: flex; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .info-box-icon { width: 65px; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; }
+        .info-box-content { padding: 12px; }
+        .info-box-number { font-size: 20px; font-weight: bold; color: #333; display: block; }
+
+        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        table th { background: #f8f9fa; padding: 12px; border: 1px solid #dee2e6; font-size: 14px; }
+        table td { padding: 12px; border: 1px solid #eee; text-align: center; }
+
+        input[type="text"], input[type="number"], select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%; }
+        .input-hadir { text-align: center; max-width: 80px; font-weight: bold; }
+        .total-kolom { background-color: #f0f4f8; font-weight: bold; color: var(--primary); }
+
+        .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; color: white; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-edit { background: var(--warning); }
+        .btn-delete { background: var(--danger); }
+        .btn-save { background: var(--success); }
+        .btn-info { background: var(--info); }
+        .btn-add { background: var(--primary); padding: 10px 15px; margin-bottom: 20px; font-size: 14px; }
+
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
+        .badge-aktif { background: #d4edda; color: var(--success); }
+        .badge-tidak { background: #f8d7da; color: var(--danger); }
+
+        /* --- Modal --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center;
+        }
+        .modal-card { width: 400px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .view-mode { display: block; }
+        .edit-mode { display: none; }
+
+        /* --- ANIMASI TEKS --- */
+        .teks-gerak {
+            display: inline-block;
+            animation: kelapKelipSatuWarna 1s infinite alternate, getarGerak 0.3s infinite alternate;
+        }
+
+        @keyframes kelapKelipSatuWarna {
+            from { color: #fff; text-shadow: 0 0 0px var(--glow-color); }
+            to { color: var(--glow-color); text-shadow: 0 0 15px var(--glow-color); }
+        }
+
+        @keyframes getarGerak {
+            from { transform: translateY(0px) scale(1); }
+            to { transform: translateY(-2px) scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="header-left">
+            <div style="font-weight: bold; font-size: 18px;" class="teks-gerak">
+                <i class="fas fa-rocket"></i> NHKBP JETUN KABIL
+            </div>
+
+            <div class="user-header-profile">
+                <img src="https://i.ibb.co/L6V7L6Y/profile-placeholder.png" alt="Avatar">
+                <div class="user-header-info">
+                    <span class="user-header-name">NHKBP JETUN KABIL</span>
+                    <span class="user-header-status">
+                        <span class="dot-online"></span> Online
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div id="logout-btn" style="cursor:pointer; font-weight:bold; font-size:14px;"><i class="fas fa-sign-out-alt"></i> KELUAR</div>
+            <div style="font-size: 10px; opacity: 0.8;">Website by <strong class="teks-gerak">CHRISTIAN SIPAYUNG</strong></div>
+        </div>
+    </header>
+
+    <nav class="sidebar">
+        <ul class="sidebar-menu">
+            <li class="active" onclick="showSection('dashboard', this)"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+            <li onclick="showSection('anggota', this)"><i class="fas fa-users"></i> Nama Anggota</li>
+            <li onclick="showSection('kehadiran', this)"><i class="fas fa-calendar-check"></i> Kehadiran</li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <section id="dashboard" class="content-section active">
+            <h2 style="margin-bottom:20px;">Dashboard</h2>
+            <div class="card" style="margin-bottom: 30px;">
+                <h3>Selamat Datang, Admin</h3>
+                <p>Manajemen data anggota dan kehadiran NHKBP JETUN KABIL.</p>
+            </div>
+            <div class="stats-row">
+                <div class="info-box">
+                    <div class="info-box-icon" style="background:var(--info)"><i class="fas fa-users"></i></div>
+                    <div class="info-box-content"><span>TOTAL ANGGOTA</span><span id="stat-total" class="info-box-number">0</span></div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-icon" style="background:var(--success)"><i class="fas fa-check-circle"></i></div>
+                    <div class="info-box-content"><span>AKTIF</span><span id="stat-aktif" class="info-box-number">0</span></div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-icon" style="background:var(--danger)"><i class="fas fa-times-circle"></i></div>
+                    <div class="info-box-content"><span>TIDAK AKTIF</span><span id="stat-tidak-aktif" class="info-box-number">0</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="anggota" class="content-section">
+            <h2>Daftar Anggota</h2>
+            <button class="btn btn-add" onclick="bukaModalTambah()"><i class="fas fa-plus"></i> Tambah Baru</button>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="text-align:left">Nama</th>
+                            <th style="text-align:left">Status</th>
+                            <th>Detail</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTabel">
+                        <tr data-kontak="0812-3456-7890" data-jabatan="Anggota">
+                            <td style="text-align:left"><span class="nama-text">Sample User</span></td>
+                            <td style="text-align:left"><span class="badge badge-aktif status-text">AKTIF</span></td>
+                            <td><button class="btn btn-info" onclick="bukaProfil(this)">Profile</button></td>
+                            <td><button class="btn btn-delete" onclick="deleteRow(this)">Hapus</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="kehadiran" class="content-section">
+            <h2>Rekap Kehadiran 2026</h2>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="text-align:left">Bulan</th>
+                            <th>W1</th><th>W2</th><th>W3</th><th>W4</th>
+                            <th style="background:#eee">TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyKehadiran">
+                        <script>
+                            const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+                            bulan.forEach(b => {
+                                document.write(`<tr>
+                                    <td style="text-align:left"><strong>${b}</strong></td>
+                                    <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
+                                    <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
+                                    <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
+                                    <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
+                                    <td class="total-kolom">0</td>
+                                </tr>`);
+                            });
+                        </script>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div id="modalProfil" class="modal-overlay">
+        <div class="card modal-card">
+            <h3 id="display-nama" style="text-align:center">Detail Anggota</h3>
+            <div id="viewMode" class="view-mode">
+                <p>Jabatan: <span id="display-jabatan"></span></p>
+                <p>Kontak: <span id="display-kontak"></span></p>
+                <p>Status: <span id="display-status"></span></p>
+                <div style="margin-top:20px; display:flex; gap:10px">
+                    <button class="btn btn-edit" style="flex:1" onclick="toggleEdit(true)">Edit</button>
+                    <button class="btn" style="background:var(--dark); flex:1" onclick="tutupModal('modalProfil')">Tutup</button>
+                </div>
+            </div>
+            <div id="editMode" class="edit-mode">
+                <label>Nama</label><input type="text" id="edit-nama">
+                <label>Jabatan</label><input type="text" id="edit-jabatan">
+                <label>Kontak</label><input type="text" id="edit-kontak">
+                <label>Status</label><select id="edit-status"><option value="AKTIF">AKTIF</option><option value="TIDAK AKTIF">TIDAK AKTIF</option></select>
+                <div style="margin-top:20px; display:flex; gap:10px">
+                    <button class="btn btn-save" style="flex:1" onclick="simpanProfil()">Simpan</button>
+                    <button class="btn" style="background:var(--danger); flex:1" onclick="toggleEdit(false)">Batal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalTambah" class="modal-overlay">
+        <div class="card modal-card">
+            <h3>Tambah Anggota</h3>
+            <label>Nama</label><input type="text" id="add-nama">
+            <label>Jabatan</label><input type="text" id="add-jabatan">
+            <label>Kontak</label><input type="text" id="add-kontak">
+            <label>Status</label><select id="add-status"><option value="AKTIF">AKTIF</option><option value="TIDAK AKTIF">TIDAK AKTIF</option></select>
+            <div style="margin-top:20px; display:flex; gap:10px">
+                <button class="btn btn-save" style="flex:1" onclick="tambahAnggota()">Tambah</button>
+                <button class="btn" style="background:var(--dark); flex:1" onclick="tutupModal('modalTambah')">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentRow = null;
+        function hitungOtomatis(el) {
+            const tr = el.closest('tr');
+            let sum = 0;
+            tr.querySelectorAll('.input-hadir').forEach(i => sum += parseInt(i.value) || 0);
+            tr.querySelector('.total-kolom').innerText = sum;
+        }
+        function showSection(id, el) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.sidebar-menu li').forEach(l => l.classList.remove('active'));
+            el.classList.add('active');
+        }
+        function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
+        function bukaModalTambah() { document.getElementById('modalTambah').style.display = 'flex'; }
+        function tambahAnggota() {
+            const nama = document.getElementById('add-nama').value;
+            if(!nama) return alert("Nama wajib diisi");
+            const tb = document.getElementById('bodyTabel');
+            const row = document.createElement('tr');
+            const status = document.getElementById('add-status').value;
+            row.setAttribute('data-jabatan', document.getElementById('add-jabatan').value);
+            row.setAttribute('data-kontak', document.getElementById('add-kontak').value);
+            row.innerHTML = `
+                <td style="text-align:left"><span class="nama-text">${nama}</span></td>
+                <td style="text-align:left"><span class="badge ${status==='AKTIF'?'badge-aktif':'badge-tidak'} status-text">${status}</span></td>
+                <td><button class="btn btn-info" onclick="bukaProfil(this)">Profile</button></td>
+                <td><button class="btn btn-delete" onclick="deleteRow(this)">Hapus</button></td>
+            `;
+            tb.appendChild(row);
+            hitungStatistik(); tutupModal('modalTambah');
+        }
+        function bukaProfil(btn) {
+            currentRow = btn.closest('tr');
+            document.getElementById('display-nama').innerText = currentRow.querySelector('.nama-text').innerText;
+            document.getElementById('display-jabatan').innerText = currentRow.getAttribute('data-jabatan');
+            document.getElementById('display-kontak').innerText = currentRow.getAttribute('data-kontak');
+            document.getElementById('display-status').innerText = currentRow.querySelector('.status-text').innerText;
+            toggleEdit(false); document.getElementById('modalProfil').style.display = 'flex';
+        }
+        function toggleEdit(ed) {
+            document.getElementById('viewMode').style.display = ed ? 'none' : 'block';
+            document.getElementById('editMode').style.display = ed ? 'block' : 'none';
+        }
+        function simpanProfil() {
+            currentRow.querySelector('.nama-text').innerText = document.getElementById('edit-nama').value;
+            const st = document.getElementById('edit-status').value;
+            const badge = currentRow.querySelector('.status-text');
+            badge.innerText = st;
+            badge.className = `badge ${st==='AKTIF'?'badge-aktif':'badge-tidak'} status-text`;
+            currentRow.setAttribute('data-jabatan', document.getElementById('edit-jabatan').value);
+            currentRow.setAttribute('data-kontak', document.getElementById('edit-kontak').value);
+            hitungStatistik(); tutupModal('modalProfil');
+        }
+        function deleteRow(btn) { if(confirm("Hapus data?")) { btn.closest('tr').remove(); hitungStatistik(); } }
+        function hitungStatistik() {
+            const rows = document.querySelectorAll('#bodyTabel tr');
+            let akt = 0;
+            rows.forEach(r => { if(r.querySelector('.status-text')?.innerText === 'AKTIF') akt++; });
+            document.getElementById('stat-total').innerText = rows.length;
+            document.getElementById('stat-aktif').innerText = akt;
+            document.getElementById('stat-tidak-aktif').innerText = rows.length - akt;
+        }
+        window.onload = hitungStatistik;
+    </script>
+</body>
+</html>
