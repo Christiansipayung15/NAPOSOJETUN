@@ -19,7 +19,14 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: var(--light-bg); display: flex; min-height: 100vh; }
+        
+        /* Layout Wrapper */
+        body { 
+            background-color: var(--light-bg); 
+            display: flex; 
+            min-height: 100vh; 
+            flex-direction: column; /* Mengatur arah aliran utama ke bawah */
+        }
 
         /* --- Header --- */
         .top-header {
@@ -43,14 +50,13 @@
             margin-left: 5px;
         }
 
-        /* Lingkaran Foto Profil */
         .user-header-profile img {
             width: 35px;
             height: 35px;
             border-radius: 50%;
             border: 2px solid #fff;
             object-fit: cover;
-            background: #eee; /* Background jika gambar belum ada */
+            background: #eee;
         }
 
         .user-header-info {
@@ -83,9 +89,23 @@
 
         .header-right { text-align: right; }
 
-        /* --- Sidebar --- */
-        .sidebar { width: 240px; background: var(--dark); height: 100vh; position: fixed; top: 60px; left: 0; }
-        .sidebar-menu { list-style: none; padding-top: 20px; }
+        /* --- Main Container (Sidebar + Content) --- */
+        .main-container {
+            display: flex;
+            flex: 1; /* Mengambil sisa ruang tinggi */
+            margin-top: 60px; /* Jarak dari header fixed */
+        }
+
+        /* --- Sidebar Update --- */
+        .sidebar { 
+            width: 240px; 
+            background: var(--dark); 
+            min-height: 100%; /* Memastikan hitamnya penuh ke bawah */
+            position: sticky; /* Tetap terlihat saat scroll jika konten pendek */
+            top: 60px;
+        }
+
+        .sidebar-menu { list-style: none; padding-top: 20px; position: sticky; top: 80px; }
         .sidebar-menu li {
             padding: 15px 20px; color: #b8c7ce; cursor: pointer; transition: 0.3s;
             display: flex; align-items: center; border-left: 3px solid transparent;
@@ -94,7 +114,14 @@
         .sidebar-menu li i { margin-right: 12px; width: 20px; text-align: center; }
 
         /* --- Content Area --- */
-        .main-content { margin-left: 240px; margin-top: 60px; padding: 30px; width: calc(100% - 240px); display: flex; flex-direction: column; }
+        .main-content { 
+            flex: 1; 
+            padding: 30px; 
+            display: flex; 
+            flex-direction: column; 
+            min-width: 0; /* Menghindari overflow pada flexbox */
+        }
+
         .content-section { display: none; animation: fadeIn 0.4s; flex-grow: 1; }
         .content-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -126,14 +153,16 @@
         .badge-aktif { background: #d4edda; color: var(--success); }
         .badge-tidak { background: #f8d7da; color: var(--danger); }
 
-        /* --- Footer Hak Cipta Berwarna --- */
+        /* --- Footer --- */
         .footer-copyright {
-            margin-top: 40px;
+            margin-top: auto; /* Mendorong footer ke paling bawah */
             padding: 20px 0;
             text-align: center;
             border-top: 1px solid #ddd;
             font-size: 14px;
             font-weight: bold;
+            width: 100%;
+            background: white;
         }
 
         .copyright-text {
@@ -176,7 +205,6 @@
             <div style="font-weight: bold; font-size: 18px;" class="teks-gerak">
                 <i class="fas fa-rocket"></i> NHKBP JETUN KABIL
             </div>
-
             <div class="user-header-profile">
                 <img src="data:image/jpeg;base64,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" alt="Logo NHKBP">
                 <div class="user-header-info">
@@ -195,96 +223,98 @@
         </div>
     </header>
 
-    <nav class="sidebar">
-        <ul class="sidebar-menu">
-            <li class="active" onclick="showSection('dashboard', this)"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
-            <li onclick="showSection('anggota', this)"><i class="fas fa-users"></i> Nama Anggota</li>
-            <li onclick="showSection('kehadiran', this)"><i class="fas fa-calendar-check"></i> Kehadiran</li>
-        </ul>
-    </nav>
+    <div class="main-container">
+        <nav class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="active" onclick="showSection('dashboard', this)"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+                <li onclick="showSection('anggota', this)"><i class="fas fa-users"></i> Nama Anggota</li>
+                <li onclick="showSection('kehadiran', this)"><i class="fas fa-calendar-check"></i> Kehadiran</li>
+            </ul>
+        </nav>
 
-    <main class="main-content">
-        <section id="dashboard" class="content-section active">
-            <h2 style="margin-bottom:20px;">Dashboard</h2>
-            <div class="card" style="margin-bottom: 30px;">
-                <h3>Selamat Datang, Admin</h3>
-                <p>Manajemen data anggota dan kehadiran NHKBP JETUN KABIL.</p>
-            </div>
-            <div class="stats-row">
-                <div class="info-box">
-                    <div class="info-box-icon" style="background:var(--info)"><i class="fas fa-users"></i></div>
-                    <div class="info-box-content"><span>TOTAL ANGGOTA</span><span id="stat-total" class="info-box-number">0</span></div>
+        <main class="main-content">
+            <section id="dashboard" class="content-section active">
+                <h2 style="margin-bottom:20px;">Dashboard</h2>
+                <div class="card" style="margin-bottom: 30px;">
+                    <h3>Selamat Datang, Admin</h3>
+                    <p>Manajemen data anggota dan kehadiran NHKBP JETUN KABIL.</p>
                 </div>
-                <div class="info-box">
-                    <div class="info-box-icon" style="background:var(--success)"><i class="fas fa-check-circle"></i></div>
-                    <div class="info-box-content"><span>AKTIF</span><span id="stat-aktif" class="info-box-number">0</span></div>
+                <div class="stats-row">
+                    <div class="info-box">
+                        <div class="info-box-icon" style="background:var(--info)"><i class="fas fa-users"></i></div>
+                        <div class="info-box-content"><span>TOTAL ANGGOTA</span><span id="stat-total" class="info-box-number">0</span></div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-icon" style="background:var(--success)"><i class="fas fa-check-circle"></i></div>
+                        <div class="info-box-content"><span>AKTIF</span><span id="stat-aktif" class="info-box-number">0</span></div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-icon" style="background:var(--danger)"><i class="fas fa-times-circle"></i></div>
+                        <div class="info-box-content"><span>TIDAK AKTIF</span><span id="stat-tidak-aktif" class="info-box-number">0</span></div>
+                    </div>
                 </div>
-                <div class="info-box">
-                    <div class="info-box-icon" style="background:var(--danger)"><i class="fas fa-times-circle"></i></div>
-                    <div class="info-box-content"><span>TIDAK AKTIF</span><span id="stat-tidak-aktif" class="info-box-number">0</span></div>
+            </section>
+
+            <section id="anggota" class="content-section">
+                <h2>Daftar Anggota</h2>
+                <button class="btn btn-add" onclick="bukaModalTambah()"><i class="fas fa-plus"></i> Tambah Baru</button>
+                <div class="card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="text-align:left">Nama</th>
+                                <th style="text-align:left">Status</th>
+                                <th>Detail</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyTabel">
+                            <tr data-kontak="0812-3456-7890" data-jabatan="Anggota">
+                                <td style="text-align:left"><span class="nama-text">Sample User</span></td>
+                                <td style="text-align:left"><span class="badge badge-aktif status-text">AKTIF</span></td>
+                                <td><button class="btn btn-info" onclick="bukaProfil(this)">Profile</button></td>
+                                <td><button class="btn btn-delete" onclick="deleteRow(this)">Hapus</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section id="anggota" class="content-section">
-            <h2>Daftar Anggota</h2>
-            <button class="btn btn-add" onclick="bukaModalTambah()"><i class="fas fa-plus"></i> Tambah Baru</button>
-            <div class="card">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="text-align:left">Nama</th>
-                            <th style="text-align:left">Status</th>
-                            <th>Detail</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bodyTabel">
-                        <tr data-kontak="0812-3456-7890" data-jabatan="Anggota">
-                            <td style="text-align:left"><span class="nama-text">Sample User</span></td>
-                            <td style="text-align:left"><span class="badge badge-aktif status-text">AKTIF</span></td>
-                            <td><button class="btn btn-info" onclick="bukaProfil(this)">Profile</button></td>
-                            <td><button class="btn btn-delete" onclick="deleteRow(this)">Hapus</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+            <section id="kehadiran" class="content-section">
+                <h2>Rekap Kehadiran 2026</h2>
+                <div class="card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="text-align:left">Bulan</th>
+                                <th>MINGGU 1</th><th>MINGGU 2</th><th>MINGGU 3</th><th>MINGGU 4</th>
+                                <th style="background:#eee">TOTAL KEHADIRAN</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyKehadiran">
+                            <script>
+                                const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+                                bulan.forEach(b => {
+                                    document.write(`<tr>
+                                        <td style="text-align:left"><strong>${b}</strong></td>
+                                        <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
+                                        <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
+                                        <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
+                                        <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
+                                        <td class="total-kolom">0</td>
+                                    </tr>`);
+                                });
+                            </script>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
 
-        <section id="kehadiran" class="content-section">
-            <h2>Rekap Kehadiran 2026</h2>
-            <div class="card">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="text-align:left">Bulan</th>
-                            <th>MINGGU 1</th><th>MINGGU 2</th><th>MINGGU 3</th><th>MINGGU 4</th>
-                            <th style="background:#eee">TOTAL KEHADIRAN</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bodyKehadiran">
-                        <script>
-                            const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-                            bulan.forEach(b => {
-                                document.write(`<tr>
-                                    <td style="text-align:left"><strong>${b}</strong></td>
-                                    <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
-                                    <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
-                                    <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
-                                    <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
-                                    <td class="total-kolom">0</td>
-                                </tr>`);
-                            });
-                        </script>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <footer class="footer-copyright">
-            <span class="copyright-text">&copy; 2026 NHKBP JETUN KABIL DEVELOPER by CHRISTIAN SIPAYUNG</span>
-        </footer>
-    </main>
+    <footer class="footer-copyright">
+        <span class="copyright-text">&copy; 2026 NHKBP JETUN KABIL DEVELOPER by CHRISTIAN SIPAYUNG</span>
+    </footer>
 
     <div id="modalProfil" class="modal-overlay">
         <div class="card modal-card">
