@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Resmi GMIT Getsemani Lemadak</title>
+    <title>WEBSITE N-HKBP JETUN</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+
         /* RESET & BASE STYLES */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth; /* Agar transisi antar menu halus */
+            scroll-behavior: smooth;
         }
 
         body {
@@ -23,7 +24,7 @@
         /* HEADER & NAVBAR */
         header {
             width: 100%;
-            position: fixed; /* Diubah ke fixed agar navigasi tetap ada saat di-scroll */
+            position: fixed;
             top: 0;
             left: 0;
             z-index: 1000;
@@ -69,7 +70,6 @@
             color: #2563eb;
         }
 
-        /* Link Login yang mengarah ke login.html */
         .login-link {
             font-weight: 600;
             background-color: #2563eb;
@@ -81,6 +81,14 @@
 
         .login-link:hover {
             background-color: #1d4ed8;
+        }
+
+        /* HAMBURGER MENU (GARIS 3) */
+        .menu-toggle {
+            display: none;
+            font-size: 26px;
+            cursor: pointer;
+            user-select: none;
         }
 
         /* HERO SECTION */
@@ -115,7 +123,6 @@
             text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
         }
 
-        /* BUTTON TENTANG */
         .btn-tentang {
             display: inline-block;
             background-color: #2563eb;
@@ -134,7 +141,6 @@
             transform: translateY(-2px);
         }
 
-        /* SECTION PLACEHOLDERS (Agar menu bisa scroll ke bawah) */
         .section-padding {
             padding: 100px 8%;
             min-height: 600px;
@@ -156,71 +162,117 @@
 
         /* RESPONSIVE */
         @media (max-width: 992px) {
+
             nav ul {
-                display: none; 
+                display: none;
+                flex-direction: column;
+                background: white;
+                position: absolute;
+                top: 60px;
+                right: 5%;
+                width: 220px;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.15);
             }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
             .hero-text h1 {
                 font-size: 2.5rem;
             }
         }
+
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-container">
-            <img src="data:image/jpeg;base64,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" alt="HKBP JETUN KABIL">
-            <span>HKBP JETUN KABIL</span>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="#home">Beranda</a></li>
-                <li><a href="#tentang">Tentang Kami</a></li>
-                <li><a href="#kontak">Kontak</a></li>
-                <li><a href="#galeri">Galeri</a></li>
-                <li><a href="#postingan">Postingan</a></li>
-                <li><a href="#kalender">Kalender</a></li>
-                <li><a href="login.html" class="login-link">Login</a></li>
-            </ul>
-        </nav>
-    </header>
+<header>
 
-    <section class="hero" id="home">
-        <div class="hero-text">
-            <p>Selamat Datang</p>
-            <h1>Website NHKBP JETUN KABIL</h1>
-            <a href="#tentang" class="btn-tentang">Tentang</a>
-        </div>
-    </section>
+    <div class="logo-container">
+        <img src="naposo.jpeg">
+        <span>HKBP JETUN KABIL</span>
+    </div>
 
-    <section id="tentang" class="section-padding">
-        <h2>Tentang Kami</h2>
-        <p>Halaman ini berisi informasi mendalam mengenai profil dan sejarah GMIT Getsemani Lemadak.</p>
-    </section>
+    <!-- GARIS 3 -->
+    <div class="menu-toggle" id="menu-toggle">
+        ☰
+    </div>
 
-    <section id="kontak" class="section-padding" style="background: #f9f9f9;">
-        <h2>Kontak</h2>
-        <p>Hubungi kami melalui alamat atau nomor telepon yang tersedia di sini.</p>
-    </section>
+    <nav>
+        <ul id="menu">
+            <li><a href="#home">Beranda</a></li>
+            <li><a href="#tentang">Tentang Kami</a></li>
+            <li><a href="#kontak">Kontak</a></li>
+            <li><a href="#galeri">Galeri</a></li>
+            <li><a href="#warta">Warta</a></li>
+            <li><a href="#kalender">Kalender</a></li>
+            <li><a href="login.html" class="login-link">Login</a></li>
+        </ul>
+    </nav>
 
-    <section id="galeri" class="section-padding">
-        <h2>Galeri</h2>
-        <p>Kumpulan dokumentasi kegiatan pelayanan dan kebersamaan jemaat.</p>
-    </section>
+</header>
 
-    <section id="postingan" class="section-padding" style="background: #f9f9f9;">
-        <h2>Postingan</h2>
-        <p>Berita terbaru, renungan harian, dan informasi warta jemaat.</p>
-    </section>
 
-    <section id="kalender" class="section-padding">
-        <h2>Kalender</h2>
-        <p>Jadwal ibadah dan rangkaian kegiatan gerejawi sepanjang tahun.</p>
-    </section>
+<section class="hero" id="home">
+    <div class="hero-text">
+        <p>Selamat Datang</p>
+        <h1>Website N-HKBP JETUN KABIL</h1>
+        <a href="#tentang" class="btn-tentang">Tentang</a>
+    </div>
+</section>
 
-    <footer>
-        <p>&copy; 2026NHKBPJETUNKABILDEVELOPER by CHRISTIANSIPAYUNG</p>
-    </footer>
+
+<section id="tentang" class="section-padding">
+    <h2>Tentang Kami</h2>
+    <p>Halaman ini berisi informasi mendalam mengenai profil dan sejarah Naposo HKBP Jetun Kabil.</p>
+</section>
+
+<section id="kontak" class="section-padding" style="background: #f9f9f9;">
+    <h2>Kontak</h2>
+    <p>Hubungi kami melalui alamat atau nomor telepon yang tersedia di sini.</p>
+</section>
+
+<section id="galeri" class="section-padding">
+    <h2>Galeri</h2>
+    <p>Kumpulan dokumentasi kegiatan pelayanan dan kebersamaan jemaat.</p>
+</section>
+
+<section id="warta" class="section-padding" style="background: #f9f9f9;">
+    <h2>Warta</h2>
+    <p>Berita terbaru, renungan harian, dan informasi warta jemaat.</p>
+</section>
+
+<section id="kalender" class="section-padding">
+    <h2>Kalender</h2>
+    <p>Jadwal ibadah dan rangkaian kegiatan gerejawi sepanjang tahun.</p>
+</section>
+
+
+<footer>
+    <p>&copy; 2026 NHKBPJETUNKABIL DEVELOPER by CHRISTIANSIPAYUNG</p>
+</footer>
+
+
+<!-- JAVASCRIPT HAMBURGER -->
+<script>
+
+const toggle = document.getElementById("menu-toggle");
+const menu = document.getElementById("menu");
+
+toggle.onclick = function()
+{
+    menu.classList.toggle("active");
+}
+
+</script>
+
 
 </body>
 </html>
