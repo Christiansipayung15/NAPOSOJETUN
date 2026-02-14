@@ -34,7 +34,6 @@
             gap: 15px;
         }
 
-        /* Styling Profil Samping Judul */
         .user-header-profile {
             display: flex;
             align-items: center;
@@ -93,8 +92,8 @@
         .sidebar-menu li i { margin-right: 12px; width: 20px; text-align: center; }
 
         /* --- Content Area --- */
-        .main-content { margin-left: 240px; margin-top: 60px; padding: 30px; width: calc(100% - 240px); }
-        .content-section { display: none; animation: fadeIn 0.4s; }
+        .main-content { margin-left: 240px; margin-top: 60px; padding: 30px; width: calc(100% - 240px); display: flex; flex-direction: column; }
+        .content-section { display: none; animation: fadeIn 0.4s; flex-grow: 1; }
         .content-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -110,8 +109,8 @@
         table th { background: #f8f9fa; padding: 12px; border: 1px solid #dee2e6; font-size: 14px; }
         table td { padding: 12px; border: 1px solid #eee; text-align: center; }
 
-        input[type="text"], input[type="number"], select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%; }
-        .input-hadir { text-align: center; max-width: 80px; font-weight: bold; }
+        input[type="text"], input[type="number"], select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%; margin-bottom: 10px; }
+        .input-hadir { text-align: center; max-width: 80px; font-weight: bold; margin-bottom: 0; }
         .total-kolom { background-color: #f0f4f8; font-weight: bold; color: var(--primary); }
 
         .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; color: white; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; gap: 5px; }
@@ -124,6 +123,23 @@
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
         .badge-aktif { background: #d4edda; color: var(--success); }
         .badge-tidak { background: #f8d7da; color: var(--danger); }
+
+        /* --- Footer Hak Cipta Berwarna --- */
+        .footer-copyright {
+            margin-top: 40px;
+            padding: 20px 0;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .copyright-text {
+            background: linear-gradient(45deg, #5d51a6, #00c0ef, #00a65a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
 
         /* --- Modal --- */
         .modal-overlay {
@@ -171,8 +187,9 @@
         </div>
 
         <div class="header-right">
-            <div id="logout-btn" style="cursor:pointer; font-weight:bold; font-size:14px;"><i class="fas fa-sign-out-alt"></i> KELUAR</div>
-            <div style="font-size: 10px; opacity: 0.8;">Website by <strong class="teks-gerak">CHRISTIAN SIPAYUNG</strong></div>
+            <div id="logout-btn" onclick="prosesLogout()" style="cursor:pointer; font-weight:bold; font-size:14px;">
+                <i class="fas fa-sign-out-alt"></i> KELUAR
+            </div>
         </div>
     </header>
 
@@ -239,8 +256,8 @@
                     <thead>
                         <tr>
                             <th style="text-align:left">Bulan</th>
-                            <th>W1</th><th>W2</th><th>W3</th><th>W4</th>
-                            <th style="background:#eee">TOTAL</th>
+                            <th>MINGGU 1</th><th>MINGGU 2</th><th>MINGGU 3</th><th>MINGGU 4</th>
+                            <th style="background:#eee">TOTAL KEHADIRAN</th>
                         </tr>
                     </thead>
                     <tbody id="bodyKehadiran">
@@ -261,15 +278,20 @@
                 </table>
             </div>
         </section>
+
+        <footer class="footer-copyright">
+            <span class="copyright-text">&copy; 2026 NHKBP JETUN KABIL DEVELOPER by CHRISTIAN SIPAYUNG</span>
+        </footer>
     </main>
 
     <div id="modalProfil" class="modal-overlay">
         <div class="card modal-card">
-            <h3 id="display-nama" style="text-align:center">Detail Anggota</h3>
+            <h3 id="display-nama-header" style="text-align:center">Detail Anggota</h3>
             <div id="viewMode" class="view-mode">
-                <p>Jabatan: <span id="display-jabatan"></span></p>
-                <p>Kontak: <span id="display-kontak"></span></p>
-                <p>Status: <span id="display-status"></span></p>
+                <p style="margin-bottom:8px;"><strong>Nama:</strong> <span id="display-nama"></span></p>
+                <p style="margin-bottom:8px;"><strong>Jabatan:</strong> <span id="display-jabatan"></span></p>
+                <p style="margin-bottom:8px;"><strong>Kontak:</strong> <span id="display-kontak"></span></p>
+                <p style="margin-bottom:8px;"><strong>Status:</strong> <span id="display-status"></span></p>
                 <div style="margin-top:20px; display:flex; gap:10px">
                     <button class="btn btn-edit" style="flex:1" onclick="toggleEdit(true)">Edit</button>
                     <button class="btn" style="background:var(--dark); flex:1" onclick="tutupModal('modalProfil')">Tutup</button>
@@ -279,7 +301,11 @@
                 <label>Nama</label><input type="text" id="edit-nama">
                 <label>Jabatan</label><input type="text" id="edit-jabatan">
                 <label>Kontak</label><input type="text" id="edit-kontak">
-                <label>Status</label><select id="edit-status"><option value="AKTIF">AKTIF</option><option value="TIDAK AKTIF">TIDAK AKTIF</option></select>
+                <label>Status</label>
+                <select id="edit-status">
+                    <option value="AKTIF">AKTIF</option>
+                    <option value="TIDAK AKTIF">TIDAK AKTIF</option>
+                </select>
                 <div style="margin-top:20px; display:flex; gap:10px">
                     <button class="btn btn-save" style="flex:1" onclick="simpanProfil()">Simpan</button>
                     <button class="btn" style="background:var(--danger); flex:1" onclick="toggleEdit(false)">Batal</button>
@@ -294,7 +320,11 @@
             <label>Nama</label><input type="text" id="add-nama">
             <label>Jabatan</label><input type="text" id="add-jabatan">
             <label>Kontak</label><input type="text" id="add-kontak">
-            <label>Status</label><select id="add-status"><option value="AKTIF">AKTIF</option><option value="TIDAK AKTIF">TIDAK AKTIF</option></select>
+            <label>Status</label>
+            <select id="add-status">
+                <option value="AKTIF">AKTIF</option>
+                <option value="TIDAK AKTIF">TIDAK AKTIF</option>
+            </select>
             <div style="margin-top:20px; display:flex; gap:10px">
                 <button class="btn btn-save" style="flex:1" onclick="tambahAnggota()">Tambah</button>
                 <button class="btn" style="background:var(--dark); flex:1" onclick="tutupModal('modalTambah')">Batal</button>
@@ -304,28 +334,45 @@
 
     <script>
         let currentRow = null;
+
+        function prosesLogout() {
+            if(confirm("Apakah Anda yakin ingin keluar?")) {
+                window.location.href = "login.html"; 
+            }
+        }
+
         function hitungOtomatis(el) {
             const tr = el.closest('tr');
             let sum = 0;
             tr.querySelectorAll('.input-hadir').forEach(i => sum += parseInt(i.value) || 0);
             tr.querySelector('.total-kolom').innerText = sum;
         }
+
         function showSection(id, el) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.sidebar-menu li').forEach(l => l.classList.remove('active'));
             el.classList.add('active');
         }
+
         function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
-        function bukaModalTambah() { document.getElementById('modalTambah').style.display = 'flex'; }
+        
+        function bukaModalTambah() { 
+            document.getElementById('modalTambah').style.display = 'flex'; 
+        }
+
         function tambahAnggota() {
             const nama = document.getElementById('add-nama').value;
             if(!nama) return alert("Nama wajib diisi");
+            
+            const jabatan = document.getElementById('add-jabatan').value || "-";
+            const kontak = document.getElementById('add-kontak').value || "-";
+            const status = document.getElementById('add-status').value;
+            
             const tb = document.getElementById('bodyTabel');
             const row = document.createElement('tr');
-            const status = document.getElementById('add-status').value;
-            row.setAttribute('data-jabatan', document.getElementById('add-jabatan').value);
-            row.setAttribute('data-kontak', document.getElementById('add-kontak').value);
+            row.setAttribute('data-jabatan', jabatan);
+            row.setAttribute('data-kontak', kontak);
             row.innerHTML = `
                 <td style="text-align:left"><span class="nama-text">${nama}</span></td>
                 <td style="text-align:left"><span class="badge ${status==='AKTIF'?'badge-aktif':'badge-tidak'} status-text">${status}</span></td>
@@ -333,39 +380,78 @@
                 <td><button class="btn btn-delete" onclick="deleteRow(this)">Hapus</button></td>
             `;
             tb.appendChild(row);
-            hitungStatistik(); tutupModal('modalTambah');
+            
+            document.getElementById('add-nama').value = "";
+            document.getElementById('add-jabatan').value = "";
+            document.getElementById('add-kontak').value = "";
+            
+            hitungStatistik(); 
+            tutupModal('modalTambah');
         }
+
         function bukaProfil(btn) {
             currentRow = btn.closest('tr');
-            document.getElementById('display-nama').innerText = currentRow.querySelector('.nama-text').innerText;
-            document.getElementById('display-jabatan').innerText = currentRow.getAttribute('data-jabatan');
-            document.getElementById('display-kontak').innerText = currentRow.getAttribute('data-kontak');
-            document.getElementById('display-status').innerText = currentRow.querySelector('.status-text').innerText;
-            toggleEdit(false); document.getElementById('modalProfil').style.display = 'flex';
+            const nama = currentRow.querySelector('.nama-text').innerText;
+            const jabatan = currentRow.getAttribute('data-jabatan');
+            const kontak = currentRow.getAttribute('data-kontak');
+            const status = currentRow.querySelector('.status-text').innerText;
+
+            document.getElementById('display-nama-header').innerText = "Profil: " + nama;
+            document.getElementById('display-nama').innerText = nama;
+            document.getElementById('display-jabatan').innerText = jabatan;
+            document.getElementById('display-kontak').innerText = kontak;
+            document.getElementById('display-status').innerText = status;
+            
+            toggleEdit(false); 
+            document.getElementById('modalProfil').style.display = 'flex';
         }
-        function toggleEdit(ed) {
-            document.getElementById('viewMode').style.display = ed ? 'none' : 'block';
-            document.getElementById('editMode').style.display = ed ? 'block' : 'none';
+
+        function toggleEdit(isEdit) {
+            if(isEdit) {
+                document.getElementById('edit-nama').value = document.getElementById('display-nama').innerText;
+                document.getElementById('edit-jabatan').value = document.getElementById('display-jabatan').innerText;
+                document.getElementById('edit-kontak').value = document.getElementById('display-kontak').innerText;
+                document.getElementById('edit-status').value = document.getElementById('display-status').innerText;
+            }
+            document.getElementById('viewMode').style.display = isEdit ? 'none' : 'block';
+            document.getElementById('editMode').style.display = isEdit ? 'block' : 'none';
         }
+
         function simpanProfil() {
-            currentRow.querySelector('.nama-text').innerText = document.getElementById('edit-nama').value;
-            const st = document.getElementById('edit-status').value;
+            const namaBaru = document.getElementById('edit-nama').value;
+            const jabatanBaru = document.getElementById('edit-jabatan').value;
+            const kontakBaru = document.getElementById('edit-kontak').value;
+            const statusBaru = document.getElementById('edit-status').value;
+
+            currentRow.querySelector('.nama-text').innerText = namaBaru;
             const badge = currentRow.querySelector('.status-text');
-            badge.innerText = st;
-            badge.className = `badge ${st==='AKTIF'?'badge-aktif':'badge-tidak'} status-text`;
-            currentRow.setAttribute('data-jabatan', document.getElementById('edit-jabatan').value);
-            currentRow.setAttribute('data-kontak', document.getElementById('edit-kontak').value);
-            hitungStatistik(); tutupModal('modalProfil');
+            badge.innerText = statusBaru;
+            badge.className = `badge ${statusBaru==='AKTIF'?'badge-aktif':'badge-tidak'} status-text`;
+            currentRow.setAttribute('data-jabatan', jabatanBaru);
+            currentRow.setAttribute('data-kontak', kontakBaru);
+            
+            hitungStatistik(); 
+            tutupModal('modalProfil');
         }
-        function deleteRow(btn) { if(confirm("Hapus data?")) { btn.closest('tr').remove(); hitungStatistik(); } }
+
+        function deleteRow(btn) { 
+            if(confirm("Hapus data?")) { 
+                btn.closest('tr').remove(); 
+                hitungStatistik(); 
+            } 
+        }
+
         function hitungStatistik() {
             const rows = document.querySelectorAll('#bodyTabel tr');
             let akt = 0;
-            rows.forEach(r => { if(r.querySelector('.status-text')?.innerText === 'AKTIF') akt++; });
+            rows.forEach(r => { 
+                if(r.querySelector('.status-text')?.innerText === 'AKTIF') akt++; 
+            });
             document.getElementById('stat-total').innerText = rows.length;
             document.getElementById('stat-aktif').innerText = akt;
             document.getElementById('stat-tidak-aktif').innerText = rows.length - akt;
         }
+
         window.onload = hitungStatistik;
     </script>
 </body>
