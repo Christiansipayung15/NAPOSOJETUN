@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NHKBP Pardamean Medan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- RESET & DASAR --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+            background-color: #ffb347;
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* --- NAVBAR --- */
+        header {
+            background-color: #ffa500; 
+            padding: 12px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-section img {
+            width: 32px;
+            height: auto;
+        }
+
+        .brand {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .login-btn {
+            background-color: #ffffff;
+            color: #ffa500;
+            padding: 6px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* --- ANIMASI HERO --- */
+        @keyframes moveUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- SECTION 1: HOME --- */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), 
+                        url('https://images.unsplash.com/photo-1511649475106-39908320496d?auto=format&fit=crop&q=80&w=1500') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 10%;
+        }
+
+        .hero h1 { font-size: 3.5rem; font-weight: 800; color: #fff4e1; animation: moveUp 1s ease-out forwards; }
+        .hero p { max-width: 900px; font-size: 1rem; opacity: 0; animation: moveUp 1s ease-out 0.4s forwards; }
+        .motto-hero { font-style: italic; opacity: 0; animation: moveUp 1s ease-out 0.8s forwards; }
+
+        .about-container { padding: 100px 8% 60px; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; }
+        .about-text-side h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 20px; }
+        .about-description { font-size: 0.9rem; text-align: justify; margin-bottom: 30px; line-height: 1.8; }
+        .about-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px; }
+        .about-gallery img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 8px; }
+        .btn-join { display: block; width: 100%; background-color: #e69500; color: #ffffff; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 700; }
+        .about-image-side img { width: 100%; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+
+        .gallery-section { padding: 60px 5% 80px; text-align: center; }
+        .slider-container { max-width: 850px; margin: 0 auto; overflow: hidden; position: relative; border-radius: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
+        .slider-wrapper { display: flex; transition: transform 0.5s ease-in-out; }
+        .slider-wrapper img { width: 100%; flex-shrink: 0; aspect-ratio: 16/9; object-fit: cover; }
+        .pagination-dots { display: flex; justify-content: center; gap: 8px; margin-top: 25px; }
+        .dot { width: 8px; height: 8px; background-color: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; }
+        .dot.active { background-color: #ffffff; width: 25px; border-radius: 10px; }
+
+        footer { background-color: #ffa500; padding: 60px 5% 20px; text-align: center; }
+
+        /* --- SECTION: PROFIL --- */
+        .other-page {
+            display: none;
+            padding: 120px 0 0 0;
+            background-color: #6a8d9d; 
+            min-height: 100vh;
+        }
+
+        .profile-content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5% 80px 5%;
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        .white-box-layout {
+            display: flex;
+            background-color: #ffffff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            align-items: stretch;
+        }
+
+        .box-image { flex: 1; min-height: 450px; }
+        .box-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .box-text {
+            flex: 1.1;
+            padding: 50px;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .box-text h2 {
+            font-size: 2.2rem;
+            color: #000;
+            margin-bottom: 25px;
+            padding-left: 15px;
+            position: relative;
+            font-weight: 800;
+        }
+
+        .box-text h2::before {
+            content: "";
+            position: absolute;
+            left: 0; top: 5px; bottom: 5px; width: 5px;
+            background-color: #2b78e4;
+        }
+
+        .box-text p {
+            font-size: 1rem;
+            line-height: 1.8;
+            text-align: justify;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        /* --- SECTION: PENGURUS --- */
+        #pengurus {
+            background-color: #6a8d9d; 
+        }
+
+        .pengurus-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 5% 100px;
+            text-align: center;
+        }
+
+        .pengurus-container h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 40px;
+            margin-top: 40px;
+        }
+
+        .pengurus-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 80px;
+        }
+
+        .seksi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .card-pengurus {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+
+        .card-pengurus:hover {
+            transform: translateY(-5px);
+        }
+
+        .avatar-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 2px solid #333;
+        }
+
+        .avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-pengurus h3 {
+            color: #000;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .card-pengurus p {
+            color: #777;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* --- SECTION: TENTANG (INSTAGRAM) --- */
+        #tentang {
+            background-color: #6a8d9d;
+        }
+
+        .social-media-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 5% 80px;
+            text-align: center;
+        }
+
+        .social-media-container h2.section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 30px;
+        }
+
+        .instagram-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            color: #333;
+        }
+
+        .instagram-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .instagram-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .btn-instagram {
+            display: inline-block;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: #ffffff;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            margin-top: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-instagram:hover {
+            transform: scale(1.05);
+        }
+
+        /* Footer Khusus Menu Profil & Pengurus */
+        .profile-footer {
+            background-color: #41677d; 
+            padding: 80px 5% 40px;
+            text-align: center;
+        }
+
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 60px;
+        }
+
+        .footer-info img { width: 60px; height: auto; }
+        .footer-info h3 { font-size: 1.8rem; font-weight: 700; }
+        .footer-info span { font-size: 0.9rem; font-style: italic; opacity: 0.9; }
+
+        .footer-bottom-line {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 20px;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* --- FLOATING MAIL --- */
+        .floating-mail {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #f1e4cf;
+            width: 55px; height: 55px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 2000;
+        }
+
+        @media (max-width: 1000px) {
+            .seksi-grid { grid-template-columns: repeat(2, 1fr); }
+            .pengurus-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .seksi-grid, .pengurus-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-section">
+            <img src="https://upload.wikimedia.org/wikipedia/id/8/8e/Logo_HKBP.png" alt="Logo">
+            <span class="brand">NHKBP Pardamean Medan</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a onclick="showPage('home')">Home</a></li>
+                <li><a onclick="showPage('profil')">Profil</a></li>
+                <li><a onclick="showPage('pengurus')">Pengurus</a></li>
+                <li><a onclick="showPage('berita')">Berita</a></li>
+                <li><a onclick="showPage('tentang')">Tentang</a></li>
+            </ul>
+        </nav>
+        <a href="login.html" class="login-btn">Login</a>
+    </header>
+
+    <div id="home-content">
+        <section class="hero">
+            <h1>Shalom, Praise the Lord!</h1>
+            <p>Selamat datang di Website <strong>NHKBP Pardamean Medan!</strong> NHKBP Pardamean Medan merupakan organisasi kepemudaan gereja (Naposo Bulung) yang berada di bawah naungan HKBP Pardamean Medan.</p>
+            <p class="motto-hero">"Masitangiangan-Masihaposan-Masiurupan"</p>
+        </section>
+
+        <section class="about-container">
+            <div class="about-text-side">
+                <h2>Tentang Kami</h2>
+                <p class="about-description">Naposobulung HKBP Pardamean Medan adalah persekutuan pemuda-pemudi Gereja yang berada di bawah naungan HKBP Pardamean Ressort Pardamean Medan. Kami terpanggil untuk melaksanakan tri tugas panggilan gereja: Marturia (bersaksi), Koinonia (bersekutu), dan Diakonia (melayani).</p>
+                <div class="about-gallery">
+                    <img src="https://via.placeholder.com/300x200?text=Pelayanan+1" alt="Kegiatan 1">
+                    <img src="https://via.placeholder.com/300x200?text=Pelayanan+2" alt="Kegiatan 2">
+                    <img src="https://via.placeholder.com/300x200?text=Pelayanan+3" alt="Kegiatan 3">
+                </div>
+                <a href="#" class="btn-join">Bergabung</a>
+            </div>
+            <div class="about-image-side"><img src="https://via.placeholder.com/600x800?text=Foto+Gereja+Utama" alt="Gereja HKBP"></div>
+        </section>
+
+        <section class="gallery-section">
+            <div class="slider-container">
+                <div class="slider-wrapper" id="sliderWrapper">
+                    <img src="https://via.placeholder.com/1000x600?text=Momen+1" alt="Galeri 1">
+                    <img src="https://via.placeholder.com/1000x600?text=Momen+2" alt="Galeri 2">
+                    <img src="https://via.placeholder.com/1000x600?text=Momen+3" alt="Galeri 3">
+                </div>
+            </div>
+            <div class="pagination-dots" id="dotContainer"></div>
+        </section>
+
+        <footer>
+            <div class="footer-logo">
+                <img src="https://upload.wikimedia.org/wikipedia/id/8/8e/Logo_HKBP.png" alt="Logo HKBP" style="width: 40px; vertical-align: middle;">
+                <span class="brand-footer" style="font-weight: 700; margin-left: 10px;">NHKBP Pardamean Medan</span>
+            </div>
+            <p class="copyright" style="margin-top: 20px; font-size: 0.8rem; opacity: 0.8;">© 2026 NHKBP Pardamean Medan</p>
+        </footer>
+    </div>
+
+    <div id="profil" class="other-page">
+        <div class="profile-content-wrapper">
+            <div class="white-box-layout">
+                <div class="box-image">
+                    <img src="https://images.unsplash.com/photo-1544427920-c49ccfb85579?q=80&w=1000" alt="Jemaat">
+                </div>
+                <div class="box-text">
+                    <h2>Profil</h2>
+                    <p>Naposo Bulung dalam Huria Kristen Batak Protestan (HKBP) adalah bagian penting dari gereja yang berfokus pada pembinaan dan persekutuan pemuda/pemudi...</p>
+                </div>
+            </div>
+            <div class="white-box-layout" style="flex-direction: row-reverse;">
+                <div class="box-image">
+                    <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1000" alt="Visi Misi">
+                </div>
+                <div class="box-text">
+                    <h2>Visi</h2>
+                    <p>Mewujudkan naposobulung gereja yang unggul dalam hal sikap, etika dan moral yang berlandaskan kasih...</p>
+                    <h2 style="margin-top: 20px;">Misi</h2>
+                    <p>Naposo Bulung HKBP Pardamean Medan memiliki misi untuk melayani dan merangkul sesama dengan penuh kasih...</p>
+                </div>
+            </div>
+        </div>
+        <div class="profile-footer">
+            <div class="footer-info">
+                <img src="https://upload.wikimedia.org/wikipedia/id/8/8e/Logo_HKBP.png" alt="Logo HKBP">
+                <h3>NHKBP Pardamean Medan</h3>
+                <span>"Masitangiangan-Masihaposan-Masiurupan"</span>
+            </div>
+            <div class="footer-bottom-line">© 2026 NHKBP Pardamean Medan</div>
+        </div>
+    </div>
+
+    <div id="pengurus" class="other-page">
+        <div class="pengurus-container">
+            <h1>Pengurus Inti</h1>
+            <div class="pengurus-grid">
+                <div class="card-pengurus">
+                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Immanuel"></div>
+                    <h3>Immanuel Situmorang</h3>
+                    <p>Ketua</p>
+                </div>
+                <div class="card-pengurus">
+                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Wilter"></div>
+                    <h3>Wilter silaban</h3>
+                    <p>Wakil Ketua</p>
+                </div>
+                <div class="card-pengurus">
+                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Lumayan"></div>
+                    <h3>Lumayan Sianturi</h3>
+                    <p>Sekretaris</p>
+                </div>
+                <div class="card-pengurus">
+                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Oktavia"></div>
+                    <h3>Oktavia Marselina Helentati Nainggolan</h3>
+                    <p>Wakil Sekretaris</p>
+                </div>
+                <div class="card-pengurus">
+                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Adnes"></div>
+                    <h3>Adnes Rida Sitorus</h3>
+                    <p>Wakil Bendahara</p>
+                </div>
+                <div class="card-pengurus">
+                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Ruth"></div>
+                    <h3>Ruth Irianty Sinaga</h3>
+                    <p>Bendahara</p>
+                </div>
+            </div>
+
+            <h1>Koordinator Seksi</h1>
+            <div class="seksi-grid">
+                <div class="card-pengurus">
+                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Jefry"></div>
+                    <h3>Jefry Josia Lumbantobing</h3>
+                    <p>Seksi Kerohanian</p>
+                </div>
+                <div class="card-pengurus">
+                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Dearti"></div>
+                    <h3>Dearti Sirait</h3>
+                    <p>Seksi Doa</p>
+                </div>
+                <div class="card-pengurus">
+                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Erik"></div>
+                    <h3>Erik Daniel Siburian</h3>
+                    <p>Seksi Sosial</p>
+                </div>
+                <div class="card-pengurus">
+                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Julius"></div>
+                    <h3>Julius Samuel Siagian</h3>
+                    <p>Seksi Koor</p>
+                </div>
+                <div class="card-pengurus">
+                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Wilfy"></div>
+                    <h3>Wilfy HR Napitupulu</h3>
+                    <p>Seksi Multimedia</p>
+                </div>
+                <div class="card-pengurus">
+                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Enni"></div>
+                    <h3>Enni Kartina Tambunan</h3>
+                    <p>Seksi Pembinaan</p>
+                </div>
+                <div class="card-pengurus">
+                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Ruas"></div>
+                    <h3>Ruas Hongkop Parulian Nababan</h3>
+                    <p>Seksi Pengembangan</p>
+                </div>
+                <div class="card-pengurus">
+                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Arielf"></div>
+                    <h3>Arielf Wahyu Pratama Hutagaol</h3>
+                    <p>Seksi Peralatan</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-footer">
+            <div class="footer-info">
+                <img src="https://upload.wikimedia.org/wikipedia/id/8/8e/Logo_HKBP.png" alt="Logo HKBP">
+                <h3>NHKBP Pardamean Medan</h3>
+                <span>"Masitangiangan-Masihaposan-Masiurupan"</span>
+            </div>
+            <div class="footer-bottom-line">© 2026 NHKBP Pardamean Medan</div>
+        </div>
+    </div>
+
+    <div id="berita" class="other-page" style="background-color: #ffb347;"><h2 style="text-align: center;">Berita Terbaru</h2></div>
+    
+    <div id="tentang" class="other-page">
+        <div class="social-media-container">
+            <h2 class="section-title">Media Sosial Kami</h2>
+            
+            <div class="instagram-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram Icon" class="instagram-icon">
+                <h3>INSTAGRAM</h3>
+                <p>Dapatkan update kegiatan terbaru melalui Instagram @naposojetun.batam</p>
+                <a href="https://www.instagram.com/naposojetun.batam?igsh=MWF3NmdpaGc2amlycw==" target="_blank" class="btn-instagram">Kunjungi Instagram</a>
+            </div>
+        </div>
+
+        <div class="profile-footer">
+            <div class="footer-info">
+                <img src="https://upload.wikimedia.org/wikipedia/id/8/8e/Logo_HKBP.png" alt="Logo HKBP">
+                <h3>NHKBP Pardamean Medan</h3>
+                <span>"Masitangiangan-Masihaposan-Masiurupan"</span>
+            </div>
+            <div class="footer-bottom-line">© 2026 NHKBP Pardamean Medan</div>
+        </div>
+    </div>
+
+    <div class="floating-mail">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath d='M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z'/%3E%3C/svg%3E" alt="mail" width="24">
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            document.getElementById('home-content').style.display = 'none';
+            const pages = document.querySelectorAll('.other-page');
+            pages.forEach(page => page.style.display = 'none');
+            
+            if (pageId === 'home') {
+                document.getElementById('home-content').style.display = 'block';
+            } else {
+                document.getElementById(pageId).style.display = 'block';
+            }
+            window.scrollTo(0, 0);
+        }
+
+        const wrapper = document.getElementById('sliderWrapper');
+        const dotsContainer = document.getElementById('dotContainer');
+        const images = wrapper.querySelectorAll('img');
+        let currentIndex = 0;
+
+        images.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (index === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(index));
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = document.querySelectorAll('.dot');
+        function goToSlide(index) {
+            currentIndex = index;
+            wrapper.style.transform = `translateX(${-currentIndex * 100}%)`;
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[currentIndex].classList.add('active');
+        }
+
+        setInterval(() => {
+            if (document.getElementById('home-content').style.display !== 'none') {
+                currentIndex = (currentIndex + 1) % images.length;
+                goToSlide(currentIndex);
+            }
+        }, 4000);
+    </script>
+</body>
+</html>
