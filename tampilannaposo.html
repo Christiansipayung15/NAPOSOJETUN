@@ -256,6 +256,7 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
             height: 100%;
+            cursor: pointer;
         }
 
         .card-pengurus:hover {
@@ -289,6 +290,61 @@
             color: #777;
             font-size: 0.85rem;
             font-weight: 500;
+        }
+
+        /* --- MODAL STYLE (TAMBAHAN SESUAI GAMBAR) --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            align-items: center; justify-content: center;
+        }
+        .modal-box {
+            background: #fff;
+            width: 90%;
+            max-width: 750px;
+            border-radius: 12px;
+            display: flex;
+            padding: 30px;
+            gap: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            animation: slideInFromTop 0.4s ease-out;
+            color: #333;
+            text-align: left;
+        }
+        .modal-left { flex: 1; }
+        .modal-left img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+        }
+        .modal-right { flex: 1.5; display: flex; flex-direction: column; }
+        .modal-right h2 { color: #002244; font-size: 2rem; font-weight: 800; margin-bottom: 5px; }
+        .modal-right .jabatan-line { 
+            font-size: 1.1rem; color: #555; 
+            border-bottom: 1px solid #eee; 
+            padding-bottom: 12px; margin-bottom: 15px; 
+        }
+        .modal-right label { font-weight: 700; display: block; margin-top: 10px; }
+        .modal-right p { font-size: 0.95rem; color: #666; margin-bottom: 20px; }
+        .modal-footer-info { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid #eee; padding-top: 15px; }
+        .info-item span { display: block; font-size: 0.85rem; color: #888; }
+        .info-item b { font-size: 0.9rem; color: #444; }
+        .btn-close {
+            background-color: #001f3f; color: white; border: none;
+            padding: 12px; border-radius: 6px; font-weight: 700;
+            margin-top: 20px; cursor: pointer; transition: 0.3s;
+        }
+        .btn-close:hover { background-color: #003366; }
+
+        @media (max-width: 600px) {
+            .modal-box { flex-direction: column; text-align: center; }
+            .modal-footer-info { grid-template-columns: 1fr; gap: 10px; }
         }
 
         /* --- SECTION: TENTANG (INSTAGRAM) --- */
@@ -499,33 +555,33 @@
             <div class="pengurus-container">
                 <h1>Pengurus Inti</h1>
                 <div class="pengurus-grid">
-                    <div class="card-pengurus">
-                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Immanuel"></div>
+                    <div class="card-pengurus" onclick="openPengurusModal('David Marbun', 'Ketua', 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png')">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="David"></div>
                         <h3>David Marbun</h3>
                         <p>Ketua</p>
                     </div>
-                    <div class="card-pengurus">
-                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Wilter"></div>
+                    <div class="card-pengurus" onclick="openPengurusModal('Daniel Sinaga', 'Wakil Ketua', 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png')">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Daniel"></div>
                         <h3>Daniel Sinaga</h3>
                         <p>Wakil Ketua</p>
                     </div>
-                    <div class="card-pengurus">
-                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Lumayan"></div>
+                    <div class="card-pengurus" onclick="openPengurusModal('Santa Hutagalung', 'Sekretaris', 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png')">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Santa"></div>
                         <h3>Santa Hutagalung</h3>
                         <p>Sekretaris</p>
                     </div>
-                    <div class="card-pengurus">
-                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Oktavia"></div>
+                    <div class="card-pengurus" onclick="openPengurusModal('Rio Marpaung', 'Humas', 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png')">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Rio"></div>
                         <h3>Rio Marpaung</h3>
                         <p>Humas</p>
                     </div>
-                    <div class="card-pengurus">
-                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Adnes"></div>
+                    <div class="card-pengurus" onclick="openPengurusModal('Maria Sihite', 'Bendahara', 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png')">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Maria"></div>
                         <h3>Maria Sihite</h3>
                         <p>Bendahara</p>
                     </div>
-                    <div class="card-pengurus">
-                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Ruth"></div>
+                    <div class="card-pengurus" onclick="openPengurusModal('Naomi', 'Rohani', 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png')">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Naomi"></div>
                         <h3>Naomi</h3>
                         <p>Rohani</p>
                     </div>
@@ -533,47 +589,12 @@
 
                 <h1>Koordinator Seksi</h1>
                 <div class="seksi-grid">
-                    <div class="card-pengurus">
-                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Jefry"></div>
+                    <div class="card-pengurus" onclick="openPengurusModal('Christian Sipayung', 'Seksi Musik', 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png')">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Christian"></div>
                         <h3>Christian Sipayung</h3>
                         <p>Seksi Musik</p>
                     </div>
-                    <div class="card-pengurus">
-                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Dearti"></div>
-                        <h3></h3>
-                        <p></p>
                     </div>
-                    <div class="card-pengurus">
-                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Erik"></div>
-                        <h3></h3>
-                        <p></p>
-                    </div>
-                    <div class="card-pengurus">
-                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Julius"></div>
-                        <h3></h3>
-                        <p></p>
-                    </div>
-                    <div class="card-pengurus">
-                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Wilfy"></div>
-                        <h3></h3>
-                        <p></p>
-                    </div>
-                    <div class="card-pengurus">
-                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Enni"></div>
-                        <h3></h3>
-                        <p></p>
-                    </div>
-                    <div class="card-pengurus">
-                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Ruas"></div>
-                        <h3></h3>
-                        <p></p>
-                    </div>
-                    <div class="card-pengurus">
-                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Arielf"></div>
-                        <h3></h3>
-                        <p></p>
-                    </div>
-                </div>
             </div>
 
             <div class="profile-footer">
@@ -610,7 +631,37 @@
             </div>
         </div>
 
-    </div> <div class="floating-mail">
+    </div>
+
+    <div id="overlayPengurus" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-left">
+                <img id="mFoto" src="" alt="Foto Pengurus">
+            </div>
+            <div class="modal-right">
+                <h2 id="mNama">Nama Pengurus</h2>
+                <div id="mJabatan" class="jabatan-line">Jabatan</div>
+                
+                <label>Deskripsi</label>
+                <p id="mDesc">Deskripsi singkat pengurus...</p>
+                
+                <div class="modal-footer-info">
+                    <div class="info-item">
+                        <span>Kontak</span>
+                        <b id="mKontak">082168301075</b>
+                    </div>
+                    <div class="info-item">
+                        <span>Tanggal Mulai</span>
+                        <b id="mTgl">8 February 2026</b>
+                    </div>
+                </div>
+                
+                <button class="btn-close" onclick="closePengurusModal()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="floating-mail">
         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath d='M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z'/%3E%3C/svg%3E" alt="mail" width="24">
     </div>
 
@@ -618,26 +669,20 @@
         function showPage(pageId, element) {
             const mainWrapper = document.getElementById('main-content-wrapper');
             
-            // Hapus class animasi lama jika ada agar bisa dipicu ulang
             mainWrapper.classList.remove('page-animate');
-            
-            // Memberikan sedikit delay agar browser menyadari class dihapus, lalu pasang kembali
-            void mainWrapper.offsetWidth; // Trik untuk memicu reflow
+            void mainWrapper.offsetWidth; 
             mainWrapper.classList.add('page-animate');
 
-            // Sembunyikan semua halaman
             document.getElementById('home-content').style.display = 'none';
             const pages = document.querySelectorAll('.other-page');
             pages.forEach(page => page.style.display = 'none');
             
-            // Tampilkan halaman yang dipilih
             if (pageId === 'home') {
                 document.getElementById('home-content').style.display = 'block';
             } else {
                 document.getElementById(pageId).style.display = 'block';
             }
 
-            // Update menu aktif
             const navLinks = document.querySelectorAll('nav a');
             navLinks.forEach(link => link.classList.remove('active-menu'));
 
@@ -648,13 +693,33 @@
             window.scrollTo(0, 0);
         }
 
+        /* DATA MODAL */
+        const detailData = {
+            "David Marbun": "Ketua Naposo HKBP Jetun Kabil yang bertanggung jawab mengoordinasi seluruh kegiatan.",
+            "Daniel Sinaga": "Membantu Ketua dalam mengawasi pelaksanaan program kerja organisasi.",
+            "Santa Hutagalung": "Mengelola administrasi, surat-menyurat, dan pendataan anggota.",
+            "Christian Sipayung": "Mengatur dan melatih pelayanan musik serta kreativitas seni Naposo."
+        };
+
+        function openPengurusModal(nama, jabatan, foto) {
+            document.getElementById('mNama').innerText = nama;
+            document.getElementById('mJabatan').innerText = jabatan;
+            document.getElementById('mFoto').src = foto;
+            document.getElementById('mDesc').innerText = detailData[nama] || "Pengurus aktif NHKBP Jetun Kabil yang melayani dengan semangat.";
+            
+            document.getElementById('overlayPengurus').style.display = 'flex';
+        }
+
+        function closePengurusModal() {
+            document.getElementById('overlayPengurus').style.display = 'none';
+        }
+
         /* LOGIKA SLIDER GALERI */
         const wrapper = document.getElementById('sliderWrapper');
         const dotsContainer = document.getElementById('dotContainer');
         const images = wrapper.querySelectorAll('img');
         let currentIndex = 0;
 
-        // Generate Dots berdasarkan jumlah gambar
         images.forEach((_, index) => {
             const dot = document.createElement('div');
             dot.classList.add('dot');
@@ -672,7 +737,6 @@
             dots[currentIndex].classList.add('active');
         }
 
-        // Fungsi Tombol Manual
         function moveSlide(direction) {
             currentIndex += direction;
             if (currentIndex >= images.length) currentIndex = 0;
@@ -680,12 +744,19 @@
             goToSlide(currentIndex);
         }
 
-        // Auto Slide Otomatis tiap 5 detik
         setInterval(() => {
             if (document.getElementById('home-content').style.display !== 'none') {
                 moveSlide(1);
             }
         }, 5000);
+
+        // Tutup modal jika klik luar box
+        window.onclick = function(event) {
+            let overlay = document.getElementById('overlayPengurus');
+            if (event.target == overlay) {
+                closePengurusModal();
+            }
+        }
     </script>
 </body>
 </html>
