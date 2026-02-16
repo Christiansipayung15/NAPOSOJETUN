@@ -66,7 +66,6 @@
             transition: color 0.3s ease;
         }
 
-        /* KELAS AKTIF UNTUK MENU (WARNA BIRU) */
         nav a.active-menu {
             color: #2b78e4 !important;
             font-weight: 700;
@@ -82,7 +81,24 @@
             font-size: 0.85rem;
         }
 
-        /* --- ANIMASI HERO --- */
+        /* --- ANIMASI BARU (DARI ATAS KE BAWAH) --- */
+        @keyframes slideInFromTop {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Class untuk memicu animasi pada container utama */
+        .page-animate {
+            animation: slideInFromTop 0.8s ease-out forwards;
+        }
+
+        /* --- ANIMASI HERO BAWAAN --- */
         @keyframes moveUp {
             from { opacity: 0; transform: translateY(50px); }
             to { opacity: 1; transform: translateY(0); }
@@ -113,12 +129,24 @@
         .btn-join { display: block; width: 100%; background-color: #e69500; color: #ffffff; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 700; }
         .about-image-side img { width: 100%; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
 
+        /* --- GALLERY SLIDER STYLES --- */
         .gallery-section { padding: 60px 5% 80px; text-align: center; }
         .slider-container { max-width: 850px; margin: 0 auto; overflow: hidden; position: relative; border-radius: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
-        .slider-wrapper { display: flex; transition: transform 0.5s ease-in-out; }
+        .slider-wrapper { display: flex; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .slider-wrapper img { width: 100%; flex-shrink: 0; aspect-ratio: 16/9; object-fit: cover; }
+        
+        .nav-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(0,0,0,0.4); color: white; border: none;
+            width: 45px; height: 45px; border-radius: 50%; cursor: pointer;
+            font-size: 1.5rem; transition: 0.3s; z-index: 10;
+        }
+        .nav-btn:hover { background: rgba(0,0,0,0.8); }
+        .prev { left: 15px; }
+        .next { right: 15px; }
+
         .pagination-dots { display: flex; justify-content: center; gap: 8px; margin-top: 25px; }
-        .dot { width: 8px; height: 8px; background-color: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; }
+        .dot { width: 8px; height: 8px; background-color: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: 0.3s; }
         .dot.active { background-color: #ffffff; width: 25px; border-radius: 10px; }
 
         footer { background-color: #ffa500; padding: 60px 5% 20px; text-align: center; }
@@ -320,7 +348,6 @@
             transform: scale(1.05);
         }
 
-        /* Footer Khusus Menu Profil & Pengurus */
         .profile-footer {
             background-color: #41677d; 
             padding: 80px 5% 40px;
@@ -346,7 +373,6 @@
             opacity: 0.8;
         }
 
-        /* --- FLOATING MAIL --- */
         .floating-mail {
             position: fixed;
             bottom: 30px;
@@ -372,7 +398,7 @@
 
     <header>
         <div class="logo-section">
-            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAJQAlAMBIgACEQEDEQH/xAAcAAEAAQUBAQAAAAAAAAAAAAAABwEEBQYIAgP/xABLEAABBAECAgYFBgkICwEAAAABAAIDBAUGESExBxJBUWGBExQycZEiI1KhscEWFyVCVWJystIVJDM2dJOU0TQ1N0NFY3WCkqKzCP/EABkBAQACAwAAAAAAAAAAAAAAAAACBAEDBf/EACgRAAICAQQBAwMFAAAAAAAAAAABAgMRBBIhMRMiMlEUQWEjQlKRwf/aAAwDAQACEQMRAD8AnFERAEREARFRAVVFgNSaywemJoIs3cdXfO0ujAgfJ1gDsfZB25hYf8bGi/0rJ/g5v4VJVzaykYyjWtedJuY05qm1i6dWlJBE1ha6VrutxbueRWKw/TBnr2Yx9OWnQbHZtRQvLWu3Ac8NJHHnxWn9JGXo53V9vIYyYzVZGsDXlhbvs3Y8CAVhsFYiqZ3GWrDurDBchlkcATs1r2knYcTwC6cNPX48uPOCu7JbuzroKq0f8bGjB/xV/wDg5v4VkcDr3TmociMfib7prJYXhhryM4Dnxc0Bc11zSy0yxuRs6IigZCIiAIiIAiIgCIiAIiIAqKqoUBCH/wChf9bYT+zzfvNUTLpzWegsbrGxUnyNm5C6sxzGCu5oBDiCd92nuWufiR09+kct/eRfwLo0amEK1FledcpPKIGRbBrzBVtN6ns4qnJNLDE1ha+YguO7QewAfUsVh6rL+Yx9KVzmx2bUULy07EBzw07b9uxV6M047vsaXF5wWi37oQ/r/F/ZZfuW9/iR09+kct/eRfwLMaU6M8RpfMtydG5flnbG6PqzvYW7O9zQezvVK3VVyg4o2wqkpZN4REXNLIREQBERAEREAREQBERAERUQFUXzmmjgidLLIyONo3c952AHiVoec6XNNYx74qskuSmbwIrN+R/5nYHy3UowlPiKMNpdkV9Mf+0HIfsRfuBa7pf+s+F/6jX/APo1XGss9+E2obOWFb1YTBoERf1iABtz2CxuLt+oZSld9H6T1WzHN1N9ut1XB22/ZyXZhFqrD+Co2t+Tr8KqjXDdMunrpazIxWcc4nbrSN9Iz4t4/EKQqV2rfrMs0rEU8D/ZkjcHA+YXHnXKHuRbUk+i4RUVVAyEREAREQBERAEREAREQBYDWGq8bpTGm3kXkvdwhgZ7czu4feeQWRzWTrYbF2cjdk6levGXvPbw7B4nkuW9Vahu6ozMuRvOPyuEMQPCJnY0fee0qxp6PK+ejXZPai71drPL6rnJvzejqg7x04j82z3/AEj4ny2Wur61a09yxHWqwvmnlcGxxsbuXHwCmPSHQ3EI47WqZXPkPH1OB2zW+DnDiT7tvNdKU66FgrqMpkLOcG+0QEDmu9lwPmusMdpXAY2MMo4ajCB2tgbufeSNyvrd07hb8ZjuYmjOzufXafuVf69fxNng/JyWsrp3UWV03b9Zw1p0JPtxkbxyftN7ffzUw6q6HcXcjfNp57qFnYkQvJdC493Hi3y4eChbL4q9hchLQyVd8FmL2mu7R9IHtB71vhdXcsEHCUDozQOu6OrqhaGivkYm7zVSd+H0mntb9natvBXIOMyFvFX4L+PlMNmB3WjePsPeDyK6h0ZqOvqjA18lX2a927Jot/6OQcx/l4EKhqdP43ldG+ue5GeREVU2BERAEREAREQBERAQz0+5521HAQv2Dv5zYAPYDswHz3PkFDh8VtfSldde17lnl24hkEDfANaB9u6xOlcY3M6lxmNfxZYsNa8d7Rxd9QK7NCVdKZUn6p4Jo6HdGR4nFx5vIRflG4zrRh44wRHkPAnmfIKTAvDGhrQGtAA4ADsXtcic3OTky0lhYCIiiZC07pJ0bDqvCvEbGtyVdpdVl5bn6BP0T/kVuKoeSlGTi8ow1lYOOHNcxxY9rmuaSHNcNi0jmD4qRug/PHHandipX/zfIsOwJ4CVo3HxG48gsR0tYtmL13fbE0NitBlloA226w2d/wCwcfNa7grj8fm8fdjOxgsxv38A4b/VuuxLF1WflFRemZ10FVeWHcbjkV6XFLgREQBERAEREAREQHKWuWubrPOB3P16X97h9SvuixzW9IWELuRmePP0b9ld9MOOdQ15dk2PUuMZYaeziOqR8Wlapir8mKylPIwjeSrM2UNHbsdyPMcPNdpeunj4Kb4sOvlVW2PuQ5ClBcqvEkE8bZI3DtaRuFcrilwIiIAh5IqOIAO52CA5/wCnmRjtYVo27ddlJvW83O2UcsBdIxreZcAPis9r/NN1Bq7I5CF3WgLxFAf1GDqg+ZBPmrfR2OOW1XiaLQdpLTC7h+a09Z31ArtVrZSs/BTlzM6trgtgYHcw0b/BfReQvS4pcCIiAIiIAiKhQFUKotZ6QNTHSmCbkmsEjjZij9GfzgXbu28eqHLMU5PCDeDWOnLTjslgYsxWYXT40kyAczC72vgQD7t1Ai66oXKmYxsVus9s9SzF1mnbcOaRyP2LnvpM0RNpbJPs1Iy7EWHfNPH+5J/Md9xV/R3Y/TkV7YZ5RnuiDX0WJ6uAzUwZTe8mpO7lE4nix3gSeB7CpzDgQCORXHHvW6aQ6Sc7pqNlbrNvUWjZtew7iwdzX8x7jupajSOTcoCFuOJHSqKL8f014GZg9fp36r+3ZgkHxB3+pfW500acijJqwZCy/sAiDB8XFUvBb1tN2+PySUSon6XtfRVKk2n8NOHXJm9W1NG7+hYebQfpH6gtR1V0tZzNRvrY5oxdV4IJid1pXD9vh1fIeaj7iSeJJPE7nmrdGkae6ZqnascFFL3QLp1zrFnUVhmzGg16pPaT7bvLl8VoWidJ3dW5YVK4dHWjINmztuIm/e49g8103Qp08PjIalVjIKtaPqtHINaO0n691PV3YjsRGqH7mXgVVqOiNZQaru5ltbb0FOdrIHdskfV9rzId5bLbVzXFxeGWU8lUVN1VYAREQBYDWs+Zp4Oe7p70b7tb5z0MjOsJmD2m9++3LbuWfVCN+xZTwwQ1ienEFrBlsK7jzkqS7+fVdt9qwvSzrjGaro4qviXylkcj5pmyxlpa7bYA9/Au5Lz0u6Hfg70max0X5Msv3la0f6PIT+6T8Dw7Qo4XVpqqliyBWnKS4ZIHRbr46Ys/ydk3OdiZ377jj6u883AfRPaPPvU9zRUczjzHKIbdKyzlwcx7SuROSlvo+yV3RWkZ81nrcoxtjhjsafbld9Ju/sg/DbcrVqqV749mapvplvrPogu03vt6Y3tVufqj3fOs/ZJ9oe/Y+9RhYgmqzur24Za87fajmYWOHkeK6e0trjA6mY0UrbY7RG5qTkNlb5dvvG6y+Uw+My8Xo8nj6ttnYJ4g7b4rXDVzr9M0SlVF9HIyLpG10VaOsyF38mvhJ7IbD2D4A7LxX6JdHwvDjQmlI7JLUhHw3W/66vHTIeBnOTGmSRscbXPkdwaxo3JPgFIOkOijMZl8djMNfjKJ4kPHzzx4NPs+fwU44nTmEwo/JWLqVT2ujiAcfeea+GotVYTTkJky1+GFxG7Yd95H+5o4laZ6yU+IIlGlLsusLh8fp/HR0cZA2CvHx27XHtc49p8VEXSz0hsvslwGClDq3s3LTDwk/Uae7vPl3rKZ3UVnpE0lbbpSxYq26zy6zjnECWxDvw6pH2A94PZvCXIciPA9izpqE5bp9iyeFhG7dFGqaels7amyb3R056pa4sYXHrtILeA97lu2V6b6jOszEYeeUj2X2ZBGD47Dc/YoTW29HOjZtXZgCRj2YyuQbUw4db/ltPefqHvCsW01ZdkyEJy9qJq6OMvndRYyTMZtkEEE7tqleGMj5A5uJPE7nl4DftW5DkvjWhjrwRwwxtjjjaGsY0bBoA2AC+y5Mmm8osoIiLBkIiID4XKsFyrLWtxMmhlYWPjkG7XA8wQueukXo5taZkkv41r7GHJJ731vB3e39b4956MXl7Gva5rmhzSNiCOBW2m6VTyiEoKSOb+jDS1TPXbN7IkT1ce30hoRkOlsO5gdXn1ftPDvVnlr+U1/rOCrMx1d0s3q0Fbbb1VnaNu8AEn3e5SZqfor2uDL6MtHGX2O64hDi1hPb1SPY93EeAVrpmhmtS5OSDVuEkpZKgwFmarSegmDjwA+T8l/Dft28OKuedN7+/8ADXsxwX2d0lidUanx1StkKYqYRhht0YfkztG3yT1hx7Gjw4rStO6h1DPrE4LTOesCg+d8dZ17+cAMaCdyTxPL61t/4Gao01XzzsDJWy02WaetPM70Nhh4/wDafaP0Vpmgcdb0bq2O/qjG3aVWGCRrZBWdK3rnYDiwHhtvxUIbdjy88cEpZyjdG6k1/Vr5K1biwRo0JXxG1Z68Al6u4Lm8TuNx4b9itNM681dqz1v1BuCospsEk8tkSEBp3+UAD4FYjU+qsZrrQ911u5VqZTH3HzVqxk6pmiA4bA892uPju1YPog1Fj8JqC+7KXYatSxRc0yScR1w5pbw7eBdwRVrxybXKDb3JGa1/mdY0MXSvfhTWs0Mh1mxvxjPRDcDfnzI58d1sOlKmn6+msbqKKDHOrS7jL3Mo4yysO2xDSd+JfsNu4hYbVlyPVOl6+NxbLeo8pHP1478OMNdkbO4cANtuHnurnRmidYxaeyWFuspUsfkdusLXzz4+Gzi1rTtufk83cNlh48XLwxzuI4dmxh9VT5bTDnVoY7D3Vg8bD0ZPsuH0SOzu2W19JGCrW8PU1jVr/wAmS3dvWcdY2Y8vP57AefeR2jj377Hl9KfgDUqWNM4E5nJTP9Gbtk+kdA780iIDbjx48NtuK9YPoyymdvNzGv70k8pHCm2TiB3OLeDR+q34rY7oZU0+F/bI7X0R9obQ9/V1wGMOgx0bvn7ZHAd7W97vqHb3Lo3BYejgsbDQxsIirxDgOZce1xPaT3q5pVIKVaOtUhjhgiaGsjY3YNHgFcKpdfK1/g2QgohERaSYREQBERAEREB5KbDgqIgPSp2IiwwfGWtXm4ywRP8A22AqkdKrEd4q0LD3tjARFlNjB99lVURYYBCryRE+4KoiLICIiAIiID//2Q==" alt="Logo">
+            <img src="logohkbp.png" alt="Logo">
             <span class="brand">NHKBP JETUN KABIL</span>
         </div>
         <nav>
@@ -387,201 +413,218 @@
         <a href="login.html" class="login-btn">Login</a>
     </header>
 
-    <div id="home-content">
-        <section class="hero">
-            <h1>Shalom, Praise the Lord!</h1>
-            <p>Selamat datang di Website <strong>NHKBP JETUN KABIL!</strong> NHKBP JETUN KABIL merupakan organisasi kepemudaan gereja (Naposo Bulung) yang berada di bawah naungan HKBP JETUN KABIL.</p>
-            <p class="motto-hero">"Masitangiangan-Masihaposan-Masiurupan"</p>
-        </section>
+    <div id="main-content-wrapper">
 
-        <section class="about-container">
-            <div class="about-text-side">
-                <h2>Tentang Kami</h2>
-                <p class="about-description">Naposobulung HKBP JETUN KABIL adalah persekutuan pemuda-pemudi Gereja yang berada di bawah naungan HKBP Pardamean Ressort JETUN KABIL. Kami terpanggil untuk melaksanakan tri tugas panggilan gereja: Marturia (bersaksi), Koinonia (bersekutu), dan Diakonia (melayani).</p>
-                <div class="about-gallery">
-                    <img src="https://via.placeholder.com/300x200?text=Pelayanan+1" alt="Kegiatan 1">
-                    <img src="https://via.placeholder.com/300x200?text=Pelayanan+2" alt="Kegiatan 2">
-                    <img src="https://via.placeholder.com/300x200?text=Pelayanan+3" alt="Kegiatan 3">
-                </div>
-                <a href="#" class="btn-join">Bergabung</a>
-            </div>
-            <div class="about-image-side"><img src="https://via.placeholder.com/600x800?text=Foto+Gereja+Utama" alt="Gereja HKBP"></div>
-        </section>
+        <div id="home-content">
+            <section class="hero">
+                <h1>Shalom, Praise the Lord!</h1>
+                <p>Selamat datang di Website <strong>NHKBP JETUN KABIL!</strong> NHKBP JETUN KABIL merupakan organisasi kepemudaan gereja (Naposo Bulung) yang berada di bawah naungan HKBP JETUN KABIL.</p>
+                <p class="motto-hero">"Masitangiangan-Masihaposan-Masiurupan"</p>
+            </section>
 
-        <section class="gallery-section">
-            <div class="slider-container">
-                <div class="slider-wrapper" id="sliderWrapper">
-                    <img src="https://via.placeholder.com/1000x600?text=Momen+1" alt="Galeri 1">
-                    <img src="https://via.placeholder.com/1000x600?text=Momen+2" alt="Galeri 2">
-                    <img src="https://via.placeholder.com/1000x600?text=Momen+3" alt="Galeri 3">
+            <section class="about-container">
+                <div class="about-text-side">
+                    <h2>Tentang Kami</h2>
+                    <p class="about-description">Naposobulung HKBP JETUN KABIL adalah persekutuan pemuda-pemudi Gereja yang berada di bawah naungan HKBP Pardamean Ressort JETUN KABIL. Kami terpanggil untuk melaksanakan tri tugas panggilan gereja: Marturia (bersaksi), Koinonia (bersekutu), dan Diakonia (melayani).</p>
+                    <div class="about-gallery">
+                        <img src="naposo.jpeg" alt="Kegiatan 1">
+                        <img src="naposo2.jpeg" alt="Kegiatan 2">
+                        <img src="naposo3.jpeg " alt="Kegiatan 3">
+                    </div>
+                    <a href="#" class="btn-join">Bergabung</a>
                 </div>
-            </div>
-            <div class="pagination-dots" id="dotContainer"></div>
-        </section>
+                <div class="about-image-side"><img src="#"></div>
+            </section>
 
-        <footer>
-            <div class="footer-logo">
-                <img src="https://upload.wikimedia.org/wikipedia/id/8/8e/Logo_HKBP.png" alt="Logo HKBP" style="width: 40px; vertical-align: middle;">
-                <span class="brand-footer" style="font-weight: 700; margin-left: 10px;">NHKBP JETUN KABIL</span>
-            </div>
-            <p class="copyright" style="margin-top: 20px; font-size: 0.8rem; opacity: 0.8;">© 2026 NHKBP JETUN KABIL DEVELOVED by CHRISTIANSIPAYUNG </p>
-        </footer>
-    </div>
+            <section class="gallery-section">
+                <h2 style="margin-bottom: 25px; font-weight: 800;">GALERI NAPOSO </h2>
+                <div class="slider-container">
+                    <div class="slider-wrapper" id="sliderWrapper">
+                        <img src="naposo.jpeg" alt="Pelayanan Musik">
+                        <img src="naposo1.jpeg" alt="Momen Ibadah">
+                        <img src="naposo2.jpeg" alt="Kegiatan Pemuda">
+                        <img src="naposo3.jpeg" alt="Persekutuan">
+                         <img src="naposo4.jpeg" alt="Persekutuan">
+                         <img src="naposo5.jpeg" alt="Persekutuan">
+                    </div>
+                    <button class="nav-btn prev" onclick="moveSlide(-1)">&#10094;</button>
+                    <button class="nav-btn next" onclick="moveSlide(1)">&#10095;</button>
+                </div>
+                <div class="pagination-dots" id="dotContainer"></div>
+            </section>
 
-    <div id="profil" class="other-page">
-        <div class="profile-content-wrapper">
-            <div class="white-box-layout">
-                <div class="box-image">
-                    <img src="https://images.unsplash.com/photo-1544427920-c49ccfb85579?q=80&w=1000" alt="Jemaat">
+            <footer>
+                <div class="footer-logo">
+                    <img src="logohkbp.png" alt="Logo HKBP" style="width: 40px; vertical-align: middle;">
+                    <span class="brand-footer" style="font-weight: 700; margin-left: 10px;">NHKBP JETUN KABIL</span>
                 </div>
-                <div class="box-text">
-                    <h2>Profil</h2>
-                    <p>Naposo Bulung dalam Huria Kristen Batak Protestan (HKBP) adalah bagian penting dari gereja yang berfokus pada pembinaan dan persekutuan pemuda/pemudi...</p>
-                </div>
-            </div>
-            <div class="white-box-layout" style="flex-direction: row-reverse;">
-                <div class="box-image">
-                    <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1000" alt="Visi Misi">
-                </div>
-                <div class="box-text">
-                    <h2>Visi</h2>
-                    <p>Mewujudkan naposobulung gereja yang unggul dalam hal sikap, etika dan moral yang berlandaskan kasih...</p>
-                    <h2 style="margin-top: 20px;">Misi</h2>
-                    <p>Naposo Bulung HKBP JETUN KABIL memiliki misi untuk melayani dan merangkul sesama dengan penuh kasih...</p>
-                </div>
-            </div>
+                <p class="copyright" style="margin-top: 20px; font-size: 0.8rem; opacity: 0.8;">© 2026 NHKBP JETUN KABIL DEVELOPED by CHRISTIANSIPAYUNG </p>
+            </footer>
         </div>
-        <div class="profile-footer">
-            <div class="footer-info">
-                <img src="https://upload.wikimedia.org/wikipedia/id/8/8e/Logo_HKBP.png" alt="Logo HKBP">
-                <h3>NHKBP JETUN KABIL</h3>
-                <span>"Masitangiangan-Masihaposan-Masiurupan"</span>
-            </div>
-            <div class="footer-bottom-line">© 2026 NHKBP JETUN KABIL DEVELOVED by CHRISTIANSIPAYUNG</div>
-        </div>
-    </div>
 
-    <div id="pengurus" class="other-page">
-        <div class="pengurus-container">
-            <h1>Pengurus Inti</h1>
-            <div class="pengurus-grid">
-                <div class="card-pengurus">
-                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Immanuel"></div>
-                    <h3>Immanuel Situmorang</h3>
-                    <p>Ketua</p>
+        <div id="profil" class="other-page">
+            <div class="profile-content-wrapper">
+                <div class="white-box-layout">
+                    <div class="box-image">
+                        <img src="https://images.unsplash.com/photo-1544427920-c49ccfb85579?q=80&w=1000" alt="Jemaat">
+                    </div>
+                    <div class="box-text">
+                        <h2>Profil</h2>
+                        <p>Naposo Bulung dalam Huria Kristen Batak Protestan (HKBP) adalah bagian penting dari gereja yang berfokus pada pembinaan dan persekutuan pemuda/pemudi...</p>
+                    </div>
                 </div>
-                <div class="card-pengurus">
-                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Wilter"></div>
-                    <h3>Wilter silaban</h3>
-                    <p>Wakil Ketua</p>
-                </div>
-                <div class="card-pengurus">
-                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Lumayan"></div>
-                    <h3>Lumayan Sianturi</h3>
-                    <p>Sekretaris</p>
-                </div>
-                <div class="card-pengurus">
-                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Oktavia"></div>
-                    <h3>Oktavia Marselina Helentati Nainggolan</h3>
-                    <p>Wakil Sekretaris</p>
-                </div>
-                <div class="card-pengurus">
-                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Adnes"></div>
-                    <h3>Adnes Rida Sitorus</h3>
-                    <p>Wakil Bendahara</p>
-                </div>
-                <div class="card-pengurus">
-                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Ruth"></div>
-                    <h3>Ruth Irianty Sinaga</h3>
-                    <p>Bendahara</p>
+                <div class="white-box-layout" style="flex-direction: row-reverse;">
+                    <div class="box-image">
+                        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1000" alt="Visi Misi">
+                    </div>
+                    <div class="box-text">
+                        <h2>Visi</h2>
+                        <p>Mewujudkan naposobulung gereja yang unggul dalam hal sikap, etika dan moral yang berlandaskan kasih...</p>
+                        <h2 style="margin-top: 20px;">Misi</h2>
+                        <p>Naposo Bulung HKBP JETUN KABIL memiliki misi untuk melayani dan merangkul sesama dengan penuh kasih...</p>
+                    </div>
                 </div>
             </div>
-
-            <h1>Koordinator Seksi</h1>
-            <div class="seksi-grid">
-                <div class="card-pengurus">
-                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Jefry"></div>
-                    <h3>Jefry Josia Lumbantobing</h3>
-                    <p>Seksi Kerohanian</p>
+            <div class="profile-footer">
+                <div class="footer-info">
+                    <img src="logohkbp.png" alt="Logo HKBP">
+                    <h3>NHKBP JETUN KABIL</h3>
+                    <span>"Masitangiangan-Masihaposan-Masiurupan"</span>
                 </div>
-                <div class="card-pengurus">
-                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Dearti"></div>
-                    <h3>Dearti Sirait</h3>
-                    <p>Seksi Doa</p>
-                </div>
-                <div class="card-pengurus">
-                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Erik"></div>
-                    <h3>Erik Daniel Siburian</h3>
-                    <p>Seksi Sosial</p>
-                </div>
-                <div class="card-pengurus">
-                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Julius"></div>
-                    <h3>Julius Samuel Siagian</h3>
-                    <p>Seksi Koor</p>
-                </div>
-                <div class="card-pengurus">
-                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Wilfy"></div>
-                    <h3>Wilfy HR Napitupulu</h3>
-                    <p>Seksi Multimedia</p>
-                </div>
-                <div class="card-pengurus">
-                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Enni"></div>
-                    <h3>Enni Kartina Tambunan</h3>
-                    <p>Seksi Pembinaan</p>
-                </div>
-                <div class="card-pengurus">
-                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Ruas"></div>
-                    <h3>Ruas Hongkop Parulian Nababan</h3>
-                    <p>Seksi Pengembangan</p>
-                </div>
-                <div class="card-pengurus">
-                    <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Arielf"></div>
-                    <h3>Arielf Wahyu Pratama Hutagaol</h3>
-                    <p>Seksi Peralatan</p>
-                </div>
+                <div class="footer-bottom-line">© 2026 NHKBP JETUN KABIL DEVELOPED by CHRISTIANSIPAYUNG</div>
             </div>
         </div>
 
-        <div class="profile-footer">
-            <div class="footer-info">
-                <img src="https://upload.wikimedia.org/wikipedia/id/8/8e/Logo_HKBP.png" alt="Logo HKBP">
-                <h3>NHKBP JETUN KABIL</h3>
-                <span>"Masitangiangan-Masihaposan-Masiurupan"</span>
-            </div>
-            <div class="footer-bottom-line">© 2026 NHKBP JETUN KABIL DEVELOVED by CHRISTIANSIPAYUNG</div>
-        </div>
-    </div>
+        <div id="pengurus" class="other-page">
+            <div class="pengurus-container">
+                <h1>Pengurus Inti</h1>
+                <div class="pengurus-grid">
+                    <div class="card-pengurus">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Immanuel"></div>
+                        <h3>David Marbun</h3>
+                        <p>Ketua</p>
+                    </div>
+                    <div class="card-pengurus">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Wilter"></div>
+                        <h3>Daniel Sinaga</h3>
+                        <p>Wakil Ketua</p>
+                    </div>
+                    <div class="card-pengurus">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Lumayan"></div>
+                        <h3>Santa Hutagalung</h3>
+                        <p>Sekretaris</p>
+                    </div>
+                    <div class="card-pengurus">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Oktavia"></div>
+                        <h3>Rio Marpaung</h3>
+                        <p>Humas</p>
+                    </div>
+                    <div class="card-pengurus">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Adnes"></div>
+                        <h3>Maria Sihite</h3>
+                        <p>Bendahara</p>
+                    </div>
+                    <div class="card-pengurus">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Ruth"></div>
+                        <h3>Naomi</h3>
+                        <p>Rohani</p>
+                    </div>
+                </div>
 
-    <div id="berita" class="other-page" style="background-color: #ffb347;"><h2 style="text-align: center;">Berita Terbaru</h2></div>
-    
-    <div id="tentang" class="other-page">
-        <div class="social-media-container">
-            <h2 class="section-title">Media Sosial Kami</h2>
-            
-            <div class="instagram-card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram Icon" class="instagram-icon">
-                <h3>INSTAGRAM</h3>
-                <p>Dapatkan update kegiatan terbaru melalui Instagram @naposojetun.batam</p>
-                <a href="https://www.instagram.com/naposojetun.batam?igsh=MWF3NmdpaGc2amlycw==" target="_blank" class="btn-instagram">Kunjungi Instagram</a>
+                <h1>Koordinator Seksi</h1>
+                <div class="seksi-grid">
+                    <div class="card-pengurus">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Jefry"></div>
+                        <h3>Christian Sipayung</h3>
+                        <p>Seksi Musik</p>
+                    </div>
+                    <div class="card-pengurus">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Dearti"></div>
+                        <h3></h3>
+                        <p></p>
+                    </div>
+                    <div class="card-pengurus">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Erik"></div>
+                        <h3></h3>
+                        <p></p>
+                    </div>
+                    <div class="card-pengurus">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Julius"></div>
+                        <h3></h3>
+                        <p></p>
+                    </div>
+                    <div class="card-pengurus">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Wilfy"></div>
+                        <h3></h3>
+                        <p></p>
+                    </div>
+                    <div class="card-pengurus">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Enni"></div>
+                        <h3></h3>
+                        <p></p>
+                    </div>
+                    <div class="card-pengurus">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Ruas"></div>
+                        <h3></h3>
+                        <p></p>
+                    </div>
+                    <div class="card-pengurus">
+                        <div class="avatar-circle"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Arielf"></div>
+                        <h3></h3>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-footer">
+                <div class="footer-info">
+                    <img src="logohkbp.png" alt="Logo HKBP">
+                    <h3>NHKBP JETUN KABIL</h3>
+                    <span>"Masitangiangan-Masihaposan-Masiurupan"</span>
+                </div>
+                <div class="footer-bottom-line">© 2026 NHKBP JETUN KABIL DEVELOPED by CHRISTIANSIPAYUNG</div>
             </div>
         </div>
 
-        <div class="profile-footer">
-            <div class="footer-info">
-                <img src="https://upload.wikimedia.org/wikipedia/id/8/8e/Logo_HKBP.png" alt="Logo HKBP">
-                <h3>NHKBP JETUN KABIL</h3>
-                <span>"Masitangiangan-Masihaposan-Masiurupan"</span>
+        <div id="berita" class="other-page" style="background-color: #ffb347;"><h2 style="text-align: center;">Berita Terbaru</h2></div>
+        
+        <div id="tentang" class="other-page">
+            <div class="social-media-container">
+                <h2 class="section-title">Media Sosial Kami</h2>
+                
+                <div class="instagram-card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram Icon" class="instagram-icon">
+                    <h3>INSTAGRAM</h3>
+                    <p>Dapatkan update kegiatan terbaru melalui Instagram @naposojetun.batam</p>
+                    <a href="https://www.instagram.com/naposojetun.batam?igsh=MWF3NmdpaGc2amlycw==" target="_blank" class="btn-instagram">Kunjungi Instagram</a>
+                </div>
             </div>
-            <div class="footer-bottom-line">© 2026 NHKBP JETUN KABIL DEVELOVED by CHRISTIANSIPAYUNG</div>
-        </div>
-    </div>
 
-    <div class="floating-mail">
+            <div class="profile-footer">
+                <div class="footer-info">
+                    <img src="logohkbp.png" alt="Logo HKBP">
+                    <h3>NHKBP JETUN KABIL</h3>
+                    <span>"Masitangiangan-Masihaposan-Masiurupan"</span>
+                </div>
+                <div class="footer-bottom-line">© 2026 NHKBP JETUN KABIL DEVELOPED by CHRISTIANSIPAYUNG</div>
+            </div>
+        </div>
+
+    </div> <div class="floating-mail">
         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath d='M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z'/%3E%3C/svg%3E" alt="mail" width="24">
     </div>
 
     <script>
         function showPage(pageId, element) {
+            const mainWrapper = document.getElementById('main-content-wrapper');
+            
+            // Hapus class animasi lama jika ada agar bisa dipicu ulang
+            mainWrapper.classList.remove('page-animate');
+            
+            // Memberikan sedikit delay agar browser menyadari class dihapus, lalu pasang kembali
+            void mainWrapper.offsetWidth; // Trik untuk memicu reflow
+            mainWrapper.classList.add('page-animate');
+
             // Sembunyikan semua halaman
             document.getElementById('home-content').style.display = 'none';
             const pages = document.querySelectorAll('.other-page');
@@ -594,12 +637,10 @@
                 document.getElementById(pageId).style.display = 'block';
             }
 
-            // MENGATUR WARNA MENU (BIRU)
-            // Hapus class 'active-menu' dari semua link navigasi
+            // Update menu aktif
             const navLinks = document.querySelectorAll('nav a');
             navLinks.forEach(link => link.classList.remove('active-menu'));
 
-            // Tambahkan class 'active-menu' ke elemen yang diklik
             if(element) {
                 element.classList.add('active-menu');
             }
@@ -607,11 +648,13 @@
             window.scrollTo(0, 0);
         }
 
+        /* LOGIKA SLIDER GALERI */
         const wrapper = document.getElementById('sliderWrapper');
         const dotsContainer = document.getElementById('dotContainer');
         const images = wrapper.querySelectorAll('img');
         let currentIndex = 0;
 
+        // Generate Dots berdasarkan jumlah gambar
         images.forEach((_, index) => {
             const dot = document.createElement('div');
             dot.classList.add('dot');
@@ -621,6 +664,7 @@
         });
 
         const dots = document.querySelectorAll('.dot');
+
         function goToSlide(index) {
             currentIndex = index;
             wrapper.style.transform = `translateX(${-currentIndex * 100}%)`;
@@ -628,12 +672,20 @@
             dots[currentIndex].classList.add('active');
         }
 
+        // Fungsi Tombol Manual
+        function moveSlide(direction) {
+            currentIndex += direction;
+            if (currentIndex >= images.length) currentIndex = 0;
+            if (currentIndex < 0) currentIndex = images.length - 1;
+            goToSlide(currentIndex);
+        }
+
+        // Auto Slide Otomatis tiap 5 detik
         setInterval(() => {
             if (document.getElementById('home-content').style.display !== 'none') {
-                currentIndex = (currentIndex + 1) % images.length;
-                goToSlide(currentIndex);
+                moveSlide(1);
             }
-        }, 4000);
+        }, 5000);
     </script>
 </body>
 </html>
