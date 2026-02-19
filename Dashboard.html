@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NHKBP JETUN KABIL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    
     <style>
         :root {
             --primary: #5d51a6;
@@ -21,177 +24,77 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background-color: var(--light-bg); display: flex; min-height: 100vh; }
 
-        /* --- Header --- */
         .top-header {
             background: var(--primary); color: white; height: 60px;
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 20px; position: fixed; width: 100%; z-index: 1000;
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .user-header-profile { display: flex; align-items: center; gap: 10px; padding-left: 15px; border-left: 1px solid rgba(255,255,255,0.2); margin-left: 5px; }
+        .user-header-profile img { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; background: #eee; }
+        .user-header-name { font-size: 13px; font-weight: 600; color: #fff; line-height: 1.2; }
+        .user-header-status { font-size: 10px; display: flex; align-items: center; gap: 4px; color: #d1d1d1; }
+        .dot-online { width: 7px; height: 7px; background-color: #2ecc71; border-radius: 50%; }
 
-        .user-header-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding-left: 15px;
-            border-left: 1px solid rgba(255,255,255,0.2);
-            margin-left: 5px;
-        }
-
-        .user-header-profile img {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            object-fit: cover;
-            background: #eee;
-        }
-
-        .user-header-info {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .user-header-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: #fff;
-            line-height: 1.2;
-        }
-
-        .user-header-status {
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            color: #d1d1d1;
-        }
-
-        .dot-online {
-            width: 7px;
-            height: 7px;
-            background-color: #2ecc71;
-            border-radius: 50%;
-        }
-
-        .header-right { text-align: right; }
-
-        /* --- Sidebar --- */
         .sidebar { width: 240px; background: var(--dark); height: 100vh; position: fixed; top: 60px; left: 0; }
         .sidebar-menu { list-style: none; padding-top: 20px; }
-        .sidebar-menu li {
-            padding: 15px 20px; color: #b8c7ce; cursor: pointer; transition: 0.3s;
-            display: flex; align-items: center; border-left: 3px solid transparent;
-        }
+        .sidebar-menu li { padding: 15px 20px; color: #b8c7ce; cursor: pointer; transition: 0.3s; display: flex; align-items: center; border-left: 3px solid transparent; }
         .sidebar-menu li.active { background: var(--sidebar-hover); color: white; border-left-color: var(--primary); }
         .sidebar-menu li i { margin-right: 12px; width: 20px; text-align: center; }
 
-        /* --- Content Area --- */
-        .main-content { margin-left: 240px; margin-top: 60px; padding: 30px; width: calc(100% - 240px); display: flex; flex-direction: column; }
-        .content-section { display: none; animation: fadeIn 0.4s; flex-grow: 1; }
+        .main-content { margin-left: 240px; margin-top: 60px; padding: 30px; width: calc(100% - 240px); }
+        .content-section { display: none; animation: fadeIn 0.4s; }
         .content-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- Stats & Tables --- */
-        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .info-box { background: white; display: flex; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-        .info-box-icon { width: 65px; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; }
-        .info-box-content { padding: 12px; }
-        .info-box-number { font-size: 20px; font-weight: bold; color: #333; display: block; }
+        .row-stats { display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap; }
+        .info-box { flex: 1; min-width: 200px; background: white; display: flex; border-radius: 5px; overflow: hidden; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+        .info-box-icon { width: 80px; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px; }
+        .info-box-content { padding: 10px 15px; display: flex; flex-direction: column; justify-content: center; }
+        .info-box-text { font-size: 14px; text-transform: uppercase; color: #666; }
+        .info-box-number { font-size: 18px; font-weight: bold; }
 
-        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; }
+        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; margin-bottom: 20px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        table th { background: #f8f9fa; padding: 12px; border: 1px solid #dee2e6; font-size: 14px; }
-        table td { padding: 12px; border: 1px solid #eee; text-align: center; }
+        table th { background: #f8f9fa; padding: 12px; border: 1px solid #dee2e6; font-size: 13px; }
+        table td { padding: 10px; border: 1px solid #eee; text-align: center; }
 
-        input[type="text"], input[type="number"], select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%; margin-bottom: 10px; }
-        .input-hadir { text-align: center; max-width: 80px; font-weight: bold; margin-bottom: 0; }
-        .total-kolom { background-color: #f0f4f8; font-weight: bold; color: var(--primary); }
-
-        .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; color: white; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+        .input-manual { width: 60px; padding: 5px; text-align: center; border: 1px solid #ddd; border-radius: 4px; font-weight: bold; }
+        .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; color: white; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-add { background: var(--primary); margin-bottom: 15px; }
+        .btn-pdf { background: #e74c3c; margin-bottom: 15px; } 
         .btn-edit { background: var(--warning); }
         .btn-delete { background: var(--danger); }
-        .btn-save { background: var(--success); }
-        .btn-info { background: var(--info); }
-        .btn-add { background: var(--primary); padding: 10px 15px; margin-bottom: 20px; font-size: 14px; }
-
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
         .badge-aktif { background: #d4edda; color: var(--success); }
         .badge-tidak { background: #f8d7da; color: var(--danger); }
 
-        /* --- Footer Hak Cipta Berwarna --- */
-        .footer-copyright {
-            margin-top: 40px;
-            padding: 20px 0;
-            text-align: center;
-            border-top: 1px solid #ddd;
-            font-size: 14px;
-            font-weight: bold;
-        }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-card { width: 400px; background: white; padding: 25px; border-radius: 8px; }
 
-        .copyright-text {
-            background: linear-gradient(45deg, #5d51a6, #00c0ef, #00a65a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-        }
-
-        /* --- Modal --- */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center;
-        }
-        .modal-card { width: 400px; position: relative; max-height: 90vh; overflow-y: auto; }
-        .view-mode { display: block; }
-        .edit-mode { display: none; }
-
-        /* --- ANIMASI TEKS --- */
-        .teks-gerak {
-            display: inline-block;
-            animation: kelapKelipSatuWarna 1s infinite alternate, getarGerak 0.3s infinite alternate;
-        }
-
-        @keyframes kelapKelipSatuWarna {
-            from { color: #fff; text-shadow: 0 0 0px var(--glow-color); }
-            to { color: var(--glow-color); text-shadow: 0 0 15px var(--glow-color); }
-        }
-
-        @keyframes getarGerak {
-            from { transform: translateY(0px) scale(1); }
-            to { transform: translateY(-2px) scale(1.05); }
-        }
+        .teks-gerak { animation: kelapKelip 1s infinite alternate; font-weight: bold; }
+        @keyframes kelapKelip { from { color: #fff; } to { color: var(--glow-color); } }
+        .footer-copyright { text-align: center; padding: 20px; font-weight: bold; border-top: 1px solid #ddd; margin-top: 20px; }
+        .copyright-text { background: linear-gradient(45deg, #5d51a6, #00c0ef, #00a65a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .filter-bulan { padding: 8px; border-radius: 4px; border: 1px solid #ddd; outline: none; margin-left: 10px; }
     </style>
 </head>
 <body>
 
     <header class="top-header">
         <div class="header-left">
-            <div style="font-weight: bold; font-size: 18px;" class="teks-gerak">
-                <i class="fas fa-rocket"></i> NHKBP JETUN KABIL
-            </div>
-
+            <div class="teks-gerak" style="font-size:18px;"><i class="fas fa-rocket"></i> NHKBP JETUN KABIL</div>
             <div class="user-header-profile">
-                <img src="data:image/jpeg;base64,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" alt="Logo NHKBP">
+                <img src="https://via.placeholder.com/35" alt="User">
                 <div class="user-header-info">
-                    <span class="user-header-name">NHKBP JETUN KABIL</span>
-                    <span class="user-header-status">
-                        <span class="dot-online"></span> Online
-                    </span>
+                    <span class="user-header-name">ADMIN NHKBP</span><br>
+                    <span class="user-header-status"><span class="dot-online"></span> Online</span>
                 </div>
             </div>
         </div>
-
-        <div class="header-right">
-            <div id="logout-btn" onclick="prosesLogout()" style="cursor:pointer; font-weight:bold; font-size:14px;">
-                <i class="fas fa-sign-out-alt"></i> KELUAR
-            </div>
-        </div>
+        <div onclick="konfirmasiLogout()" style="cursor:pointer"><i class="fas fa-sign-out-alt"></i> KELUAR</div>
     </header>
 
     <nav class="sidebar">
@@ -204,56 +107,76 @@
 
     <main class="main-content">
         <section id="dashboard" class="content-section active">
-            <h2 style="margin-bottom:20px;">Dashboard</h2>
-            <div class="card" style="margin-bottom: 30px;">
-                <h3>Selamat Datang, Admin</h3>
-                <p>Manajemen data anggota dan kehadiran NHKBP JETUN KABIL.</p>
+            <h2>Dashboard</h2>
+            <div class="row-stats">
+                <div class="info-box">
+                    <span class="info-box-icon" style="background-color: var(--info);"><i class="fas fa-users"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Anggota</span>
+                        <span id="dash-total" class="info-box-number">0</span>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <span class="info-box-icon" style="background-color: var(--success);"><i class="fas fa-check-circle"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Anggota Aktif</span>
+                        <span id="dash-aktif" class="info-box-number">0</span>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <span class="info-box-icon" style="background-color: var(--danger);"><i class="fas fa-times-circle"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Tidak Aktif</span>
+                        <span id="dash-tidak" class="info-box-number">0</span>
+                    </div>
+                </div>
             </div>
-            <div class="stats-row">
-                <div class="info-box">
-                    <div class="info-box-icon" style="background:var(--info)"><i class="fas fa-users"></i></div>
-                    <div class="info-box-content"><span>TOTAL ANGGOTA</span><span id="stat-total" class="info-box-number">0</span></div>
-                </div>
-                <div class="info-box">
-                    <div class="info-box-icon" style="background:var(--success)"><i class="fas fa-check-circle"></i></div>
-                    <div class="info-box-content"><span>AKTIF</span><span id="stat-aktif" class="info-box-number">0</span></div>
-                </div>
-                <div class="info-box">
-                    <div class="info-box-icon" style="background:var(--danger)"><i class="fas fa-times-circle"></i></div>
-                    <div class="info-box-content"><span>TIDAK AKTIF</span><span id="stat-tidak-aktif" class="info-box-number">0</span></div>
-                </div>
+            <div class="card" style="margin-top: 20px;">
+                <h3>Selamat Datang di Panel Admin</h3>
+                <p>Silahkan kelola data melalui menu navigasi di samping.</p>
             </div>
         </section>
 
         <section id="anggota" class="content-section">
-            <h2>Daftar Anggota</h2>
-            <button class="btn btn-add" onclick="bukaModalTambah()"><i class="fas fa-plus"></i> Tambah Baru</button>
+            <h2>Daftar Anggota & Absensi 2026</h2>
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-add" style="margin:0" onclick="bukaModal()"><i class="fas fa-plus"></i> Tambah Anggota</button>
+                    <button class="btn btn-pdf" style="margin:0" onclick="ekstrakPDFAnggota()"><i class="fas fa-file-pdf"></i> PDF Bulan Ini</button>
+                    <button class="btn btn-pdf" style="margin:0; background: #27ae60;" onclick="ekstrakRekapTahunan()"><i class="fas fa-file-pdf"></i> Rekap Tahunan Anggota</button>
+                </div>
+                <div>
+                    <label>Pilih Bulan Absensi: </label>
+                    <select id="select-bulan-absensi" class="filter-bulan" onchange="renderAnggota()">
+                    </select>
+                </div>
+            </div>
             <div class="card">
                 <table>
                     <thead>
                         <tr>
-                            <th style="text-align:left">Nama</th>
-                            <th style="text-align:left">Status</th>
-                            <th>Detail</th>
-                            <th>Aksi</th>
+                            <th rowspan="2">No</th>
+                            <th rowspan="2" style="text-align:left">Nama Naposo</th>
+                            <th rowspan="2">Jabatan</th>
+                            <th colspan="4" id="label-bulan-tabel">Bulan Januari</th>
+                            <th rowspan="2">Status</th>
+                            <th rowspan="2">Aksi</th>
+                        </tr>
+                        <tr>
+                            <th>M1</th><th>M2</th><th>M3</th><th>M4</th>
                         </tr>
                     </thead>
-                    <tbody id="bodyTabel">
-                        <tr data-kontak="0812-3456-7890" data-jabatan="Anggota">
-                            <td style="text-align:left"><span class="nama-text">Sample User</span></td>
-                            <td style="text-align:left"><span class="badge badge-aktif status-text">AKTIF</span></td>
-                            <td><button class="btn btn-info" onclick="bukaProfil(this)">Profile</button></td>
-                            <td><button class="btn btn-delete" onclick="deleteRow(this)">Hapus</button></td>
-                        </tr>
-                    </tbody>
+                    <tbody id="body-anggota"></tbody>
                 </table>
             </div>
         </section>
 
         <section id="kehadiran" class="content-section">
             <h2>Rekap Kehadiran 2026</h2>
+            <button class="btn btn-pdf" onclick="ekstrakPDF()"><i class="fas fa-file-pdf"></i> Ekstrak PDF</button>
+            
             <div class="card">
-                <table>
+                <table id="tabel-rekap-pdf">
                     <thead>
                         <tr>
                             <th style="text-align:left">Bulan</th>
@@ -261,21 +184,7 @@
                             <th style="background:#eee">TOTAL KEHADIRAN</th>
                         </tr>
                     </thead>
-                    <tbody id="bodyKehadiran">
-                        <script>
-                            const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-                            bulan.forEach(b => {
-                                document.write(`<tr>
-                                    <td style="text-align:left"><strong>${b}</strong></td>
-                                    <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
-                                    <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
-                                    <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
-                                    <td><input type="number" class="input-hadir" value="0" oninput="hitungOtomatis(this)"></td>
-                                    <td class="total-kolom">0</td>
-                                </tr>`);
-                            });
-                        </script>
-                    </tbody>
+                    <tbody id="body-kehadiran"></tbody>
                 </table>
             </div>
         </section>
@@ -285,94 +194,93 @@
         </footer>
     </main>
 
-    <div id="modalProfil" class="modal-overlay">
-        <div class="card modal-card">
-            <h3 id="display-nama-header" style="text-align:center">Detail Anggota</h3>
-            <div id="viewMode" class="view-mode">
-                <p style="margin-bottom:8px;"><strong>Nama:</strong> <span id="display-nama"></span></p>
-                <p style="margin-bottom:8px;"><strong>Jabatan:</strong> <span id="display-jabatan"></span></p>
-                <p style="margin-bottom:8px;"><strong>Kontak:</strong> <span id="display-kontak"></span></p>
-                <p style="margin-bottom:8px;"><strong>Status:</strong> <span id="display-status"></span></p>
-                <div style="margin-top:20px; display:flex; gap:10px">
-                    <button class="btn btn-edit" style="flex:1" onclick="toggleEdit(true)">Edit</button>
-                    <button class="btn" style="background:var(--dark); flex:1" onclick="tutupModal('modalProfil')">Tutup</button>
-                </div>
-            </div>
-            <div id="editMode" class="edit-mode">
-                <label>Nama</label><input type="text" id="edit-nama">
-                <label>Jabatan</label><input type="text" id="edit-jabatan">
-                <label>Kontak</label><input type="text" id="edit-kontak">
-                <label>Status</label>
-                <select id="edit-status">
-                    <option value="AKTIF">AKTIF</option>
-                    <option value="TIDAK AKTIF">TIDAK AKTIF</option>
-                </select>
-                <div style="margin-top:20px; display:flex; gap:10px">
-                    <button class="btn btn-save" style="flex:1" onclick="simpanProfil()">Simpan</button>
-                    <button class="btn" style="background:var(--danger); flex:1" onclick="toggleEdit(false)">Batal</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="modalTambah" class="modal-overlay">
-        <div class="card modal-card">
-            <h3>Tambah Anggota</h3>
-            <label>Nama</label><input type="text" id="add-nama">
-            <label>Jabatan</label><input type="text" id="add-jabatan">
-            <label>Kontak</label><input type="text" id="add-kontak">
-            <label>Status</label>
-            <select id="add-status">
+    <div id="modal-anggota" class="modal-overlay">
+        <div class="modal-card">
+            <h3 id="modal-title">Data Anggota</h3><br>
+            <input type="hidden" id="edit-id">
+            
+            <label>Nama:</label><br>
+            <input type="text" id="inp-nama" style="width:100%; padding:8px; margin:8px 0;"><br>
+            
+            <label>Jabatan:</label><br>
+            <input type="text" id="inp-jabatan" placeholder="Contoh: Anggota / Pengurus" style="width:100%; padding:8px; margin:8px 0;"><br>
+            
+            <label>Kontak (WA):</label><br>
+            <input type="text" id="inp-kontak" placeholder="0812..." style="width:100%; padding:8px; margin:8px 0;"><br>
+            
+            <label>Status:</label><br>
+            <select id="inp-status" style="width:100%; padding:8px; margin:8px 0;">
                 <option value="AKTIF">AKTIF</option>
                 <option value="TIDAK AKTIF">TIDAK AKTIF</option>
-            </select>
-            <div style="margin-top:20px; display:flex; gap:10px">
-                <button class="btn btn-save" style="flex:1" onclick="tambahAnggota()">Tambah</button>
-                <button class="btn" style="background:var(--dark); flex:1" onclick="tutupModal('modalTambah')">Batal</button>
+            </select><br><br>
+            
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-add" style="flex:1; margin:0;" onclick="simpanAnggota()">Simpan</button>
+                <button class="btn" style="flex:1; background:#666;" onclick="tutupModal()">Batal</button>
             </div>
         </div>
     </div>
 
     <script>
-        let currentRow = null;
-
-        // --- LOGIKA AUTO LOGOUT TERSEMBUNYI (1 MENIT) ---
-        let idleTime = 0;
-        const maxIdle = 60; // 60 detik = 1 menit
-
-        function timerIncrement() {
-            idleTime++;
-            if (idleTime >= maxIdle) { 
-                window.location.href = "login.html"; 
-            }
+        // --- LOGIKA LOGOUT DAN AUTO LOGOUT (1 MENIT) ---
+        let timeout;
+        function resetTimer() {
+            clearTimeout(timeout);
+            timeout = setTimeout(logoutOtomatis, 60000); // 60 detik
         }
 
-        // Reset timer jika ada aktivitas
-        function resetIdle() {
-            idleTime = 0;
-        }
-
-        // Jalankan timer setiap 1 detik
-        setInterval(timerIncrement, 1000);
-
-        // Deteksi aktivitas user
-        window.onmousemove = resetIdle;
-        window.onkeypress = resetIdle;
-        window.onclick = resetIdle;
-        window.onscroll = resetIdle;
-
-        // --- FUNGSI EXISTING ---
-        function prosesLogout() {
+        function konfirmasiLogout() {
             if(confirm("Apakah Anda yakin ingin keluar?")) {
-                window.location.href = "login.html"; 
+                logoutOtomatis();
             }
         }
 
-        function hitungOtomatis(el) {
-            const tr = el.closest('tr');
-            let sum = 0;
-            tr.querySelectorAll('.input-hadir').forEach(i => sum += parseInt(i.value) || 0);
-            tr.querySelector('.total-kolom').innerText = sum;
+        function logoutOtomatis() {
+            alert("Sesi berakhir. Anda telah keluar.");
+            // Menghapus data sementara jika perlu, atau langsung reload ke awal
+         window.location.href = "login.html"; 
+}
+
+        // Pantau aktivitas user
+        window.onmousemove = resetTimer;
+        window.onmousedown = resetTimer; 
+        window.onclick = resetTimer;     
+        window.onkeydown = resetTimer;   
+        window.addEventListener('scroll', resetTimer, true);
+
+        // --- DATA & CORE LOGIC ---
+        const namaAwal = ["Adelio Pakpahan", "Aderman Purba", "Christian Sipayung", "Christine Hutagalung", "David Marbun", "David Silitonga", "Demetrio Marpaung", "Felix Manalu", "Indro Sipayung", "Juardiansyah Siagian", "Julia Sibarani", "Rizki Aritonang", "Samuel Gultom", "Santha Hutagalung", "Sara Sihombing", "Sondang Pasaribu", "Wira Tambunan", "Wulan Harianja", "Angel Simbolon", "Christine Simbolon", "Feby Ambarita", "Flora Aruan", "Gita Hutagalung", "Rona Harianja", "Sartika Matondang", "Tika Marbun", "Agnes Panggabean", "Daniel Sinaga", "Dendy Marbun", "Ferdi Simatupang", "Hanani Manurung", "Hezkiel Panjaitan", "Jenni Sihombing", "Kesya Sihite", "Maria Sihite", "Mcleod Lumbangaol", "Naomi Silitonga", "Rossy Samosir", "Yolanda Sijabat", "Yolanda Sitorus"];
+        const bulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+        // Memuat data dari local storage atau menggunakan data awal
+        let jemaat = JSON.parse(localStorage.getItem('dataJemaat')) || namaAwal.map((n, i) => {
+            let absensi = {};
+            bulanArr.forEach(b => { absensi[b] = [false, false, false, false]; });
+            return { 
+                id: i+1, 
+                nama: n, 
+                jabatan: "Anggota", 
+                kontak: "-", 
+                status: i < 26 ? "AKTIF" : "TIDAK AKTIF",
+                absensi: absensi
+            };
+        });
+
+        let rekapManual = JSON.parse(localStorage.getItem('dataRekap')) || Array(12).fill(null).map(() => [0, 0, 0, 0]);
+
+        function simpanKeStorage() {
+            localStorage.setItem('dataJemaat', JSON.stringify(jemaat));
+            localStorage.setItem('dataRekap', JSON.stringify(rekapManual));
+        }
+
+        function initBulanSelect() {
+            const select = document.getElementById('select-bulan-absensi');
+            bulanArr.forEach(b => {
+                let opt = document.createElement('option');
+                opt.value = b;
+                opt.innerText = b;
+                select.appendChild(opt);
+            });
         }
 
         function showSection(id, el) {
@@ -382,104 +290,199 @@
             el.classList.add('active');
         }
 
-        function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
-        
-        function bukaModalTambah() { 
-            document.getElementById('modalTambah').style.display = 'flex'; 
-        }
-
-        function tambahAnggota() {
-            const nama = document.getElementById('add-nama').value;
-            if(!nama) return alert("Nama wajib diisi");
-            
-            const jabatan = document.getElementById('add-jabatan').value || "-";
-            const kontak = document.getElementById('add-kontak').value || "-";
-            const status = document.getElementById('add-status').value;
-            
-            const tb = document.getElementById('bodyTabel');
-            const row = document.createElement('tr');
-            row.setAttribute('data-jabatan', jabatan);
-            row.setAttribute('data-kontak', kontak);
-            row.innerHTML = `
-                <td style="text-align:left"><span class="nama-text">${nama}</span></td>
-                <td style="text-align:left"><span class="badge ${status==='AKTIF'?'badge-aktif':'badge-tidak'} status-text">${status}</span></td>
-                <td><button class="btn btn-info" onclick="bukaProfil(this)">Profile</button></td>
-                <td><button class="btn btn-delete" onclick="deleteRow(this)">Hapus</button></td>
-            `;
-            tb.appendChild(row);
-            
-            document.getElementById('add-nama').value = "";
-            document.getElementById('add-jabatan').value = "";
-            document.getElementById('add-kontak').value = "";
-            
-            hitungStatistik(); 
-            tutupModal('modalTambah');
-        }
-
-        function bukaProfil(btn) {
-            currentRow = btn.closest('tr');
-            const nama = currentRow.querySelector('.nama-text').innerText;
-            const jabatan = currentRow.getAttribute('data-jabatan');
-            const kontak = currentRow.getAttribute('data-kontak');
-            const status = currentRow.querySelector('.status-text').innerText;
-
-            document.getElementById('display-nama-header').innerText = "Profil: " + nama;
-            document.getElementById('display-nama').innerText = nama;
-            document.getElementById('display-jabatan').innerText = jabatan;
-            document.getElementById('display-kontak').innerText = kontak;
-            document.getElementById('display-status').innerText = status;
-            
-            toggleEdit(false); 
-            document.getElementById('modalProfil').style.display = 'flex';
-        }
-
-        function toggleEdit(isEdit) {
-            if(isEdit) {
-                document.getElementById('edit-nama').value = document.getElementById('display-nama').innerText;
-                document.getElementById('edit-jabatan').value = document.getElementById('display-jabatan').innerText;
-                document.getElementById('edit-kontak').value = document.getElementById('display-kontak').innerText;
-                document.getElementById('edit-status').value = document.getElementById('display-status').innerText;
+        function toggleAbsen(jemaatId, bulan, mingguIdx) {
+            const index = jemaat.findIndex(j => j.id === jemaatId);
+            if (index !== -1) {
+                jemaat[index].absensi[bulan][mingguIdx] = !jemaat[index].absensi[bulan][mingguIdx];
+                simpanKeStorage();
             }
-            document.getElementById('viewMode').style.display = isEdit ? 'none' : 'block';
-            document.getElementById('editMode').style.display = isEdit ? 'block' : 'none';
         }
 
-        function simpanProfil() {
-            const namaBaru = document.getElementById('edit-nama').value;
-            const jabatanBaru = document.getElementById('edit-jabatan').value;
-            const kontakBaru = document.getElementById('edit-kontak').value;
-            const statusBaru = document.getElementById('edit-status').value;
-
-            currentRow.querySelector('.nama-text').innerText = namaBaru;
-            const badge = currentRow.querySelector('.status-text');
-            badge.innerText = statusBaru;
-            badge.className = `badge ${statusBaru==='AKTIF'?'badge-aktif':'badge-tidak'} status-text`;
-            currentRow.setAttribute('data-jabatan', jabatanBaru);
-            currentRow.setAttribute('data-kontak', kontakBaru);
+        function renderAnggota() {
+            const tbody = document.getElementById('body-anggota');
+            const bulanDipilih = document.getElementById('select-bulan-absensi').value;
+            document.getElementById('label-bulan-tabel').innerText = "Bulan " + bulanDipilih;
             
-            hitungStatistik(); 
-            tutupModal('modalProfil');
-        }
-
-        function deleteRow(btn) { 
-            if(confirm("Hapus data?")) { 
-                btn.closest('tr').remove(); 
-                hitungStatistik(); 
-            } 
-        }
-
-        function hitungStatistik() {
-            const rows = document.querySelectorAll('#bodyTabel tr');
-            let akt = 0;
-            rows.forEach(r => { 
-                if(r.querySelector('.status-text')?.innerText === 'AKTIF') akt++; 
+            tbody.innerHTML = "";
+            jemaat.forEach((item, i) => {
+                const abs = item.absensi[bulanDipilih];
+                tbody.innerHTML += `<tr>
+                    <td>${i + 1}</td>
+                    <td style="text-align:left"><b>${item.nama}</b></td>
+                    <td>${item.jabatan || '-'}</td>
+                    <td><input type="checkbox" ${abs[0]?'checked':''} onchange="toggleAbsen(${item.id}, '${bulanDipilih}', 0)"></td>
+                    <td><input type="checkbox" ${abs[1]?'checked':''} onchange="toggleAbsen(${item.id}, '${bulanDipilih}', 1)"></td>
+                    <td><input type="checkbox" ${abs[2]?'checked':''} onchange="toggleAbsen(${item.id}, '${bulanDipilih}', 2)"></td>
+                    <td><input type="checkbox" ${abs[3]?'checked':''} onchange="toggleAbsen(${item.id}, '${bulanDipilih}', 3)"></td>
+                    <td><span class="badge ${item.status==='AKTIF'?'badge-aktif':'badge-tidak'}">${item.status}</span></td>
+                    <td>
+                        <button class="btn btn-edit" onclick="editAnggota(${item.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-delete" onclick="hapusAnggota(${item.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
             });
-            document.getElementById('stat-total').innerText = rows.length;
-            document.getElementById('stat-aktif').innerText = akt;
-            document.getElementById('stat-tidak-aktif').innerText = rows.length - akt;
+            updateDashboard();
         }
 
-        window.onload = hitungStatistik;
+        function renderKehadiran() {
+            const tbody = document.getElementById('body-kehadiran');
+            tbody.innerHTML = "";
+            bulanArr.forEach((bul, idx) => {
+                const row = rekapManual[idx];
+                const total = row[0] + row[1] + row[2] + row[3];
+                tbody.innerHTML += `<tr>
+                    <td style="text-align:left"><strong>${bul}</strong></td>
+                    <td><input type="number" class="input-manual" value="${row[0]}" oninput="updateKehadiran(${idx},0,this.value)"></td>
+                    <td><input type="number" class="input-manual" value="${row[1]}" oninput="updateKehadiran(${idx},1,this.value)"></td>
+                    <td><input type="number" class="input-manual" value="${row[2]}" oninput="updateKehadiran(${idx},2,this.value)"></td>
+                    <td><input type="number" class="input-manual" value="${row[3]}" oninput="updateKehadiran(${idx},3,this.value)"></td>
+                    <td id="tot-${idx}" style="font-weight:bold; background:#f0f4f8;">${total}</td>
+                </tr>`;
+            });
+        }
+
+        function updateKehadiran(bIdx, mIdx, val) {
+            rekapManual[bIdx][mIdx] = parseInt(val) || 0;
+            simpanKeStorage();
+            const total = rekapManual[bIdx][0] + rekapManual[bIdx][1] + rekapManual[bIdx][2] + rekapManual[bIdx][3];
+            document.getElementById(`tot-${bIdx}`).innerText = total;
+        }
+
+        function updateDashboard() {
+            document.getElementById('dash-total').innerText = jemaat.length;
+            document.getElementById('dash-aktif').innerText = jemaat.filter(a => a.status === 'AKTIF').length;
+            document.getElementById('dash-tidak').innerText = jemaat.filter(a => a.status !== 'AKTIF').length;
+        }
+
+        // --- PDF FUNCTIONS ---
+        function ekstrakPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFontSize(16);
+            doc.text("LAPORAN REKAP KEHADIRAN NHKBP JETUN KABIL", 105, 15, { align: "center" });
+            const bodyData = bulanArr.map((bul, idx) => {
+                const row = rekapManual[idx];
+                return [bul, row[0], row[1], row[2], row[3], (row[0]+row[1]+row[2]+row[3])];
+            });
+            doc.autoTable({
+                startY: 30,
+                head: [['Bulan', 'Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4', 'Total']],
+                body: bodyData,
+                theme: 'grid',
+                headStyles: { fillColor: [93, 81, 166] }
+            });
+            doc.save("Rekap_Kehadiran_NHKBP_2026.pdf");
+        }
+
+        function ekstrakPDFAnggota() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a4');
+            const bulanDipilih = document.getElementById('select-bulan-absensi').value;
+            doc.setFontSize(16);
+            doc.text("DAFTAR ANGGOTA & ABSENSI NHKBP JETUN KABIL - " + bulanDipilih, 148, 15, { align: "center" });
+            const bodyData = jemaat.map((item, idx) => {
+                const abs = item.absensi[bulanDipilih];
+                return [idx + 1, item.nama, item.jabatan, item.kontak, abs[0]?"X":"-", abs[1]?"X":"-", abs[2]?"X":"-", abs[3]?"X":"-", item.status];
+            });
+            doc.autoTable({
+                startY: 30,
+                head: [['No', 'Nama Naposo', 'Jabatan', 'Kontak', 'M1', 'M2', 'M3', 'M4', 'Status']],
+                body: bodyData,
+                theme: 'grid',
+                headStyles: { fillColor: [93, 81, 166] }
+            });
+            doc.save(`Data_Anggota_NHKBP_${bulanDipilih}.pdf`);
+        }
+
+        function ekstrakRekapTahunan() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', [297, 420]);
+            doc.setFontSize(18);
+            doc.text("REKAPITULASI KEHADIRAN ANGGOTA NHKBP JETUN KABIL 2026", 210, 15, { align: "center" });
+            let head1 = ['No', 'Nama Naposo'];
+            let head2 = ['', ''];
+            bulanArr.forEach(b => {
+                head1.push({content: b, colSpan: 4, styles: {halign: 'center'}});
+                head2.push('M1', 'M2', 'M3', 'M4');
+            });
+            head1.push('Total'); head2.push('');
+            const bodyData = jemaat.map((item, idx) => {
+                let row = [idx + 1, item.nama];
+                let totalHadir = 0;
+                bulanArr.forEach(b => {
+                    item.absensi[b].forEach(m => {
+                        if(m) { row.push('X'); totalHadir++; } else { row.push('-'); }
+                    });
+                });
+                row.push(totalHadir);
+                return row;
+            });
+            doc.autoTable({
+                startY: 25,
+                head: [head1, head2],
+                body: bodyData,
+                theme: 'grid',
+                headStyles: { fillColor: [93, 81, 166], fontSize: 7 },
+                styles: { fontSize: 6 }
+            });
+            doc.save("Rekap_Tahunan_Anggota_2026.pdf");
+        }
+
+        // --- CRUD ACTIONS ---
+        function bukaModal() { 
+            document.getElementById('edit-id').value = "";
+            document.getElementById('inp-nama').value = "";
+            document.getElementById('inp-jabatan').value = "";
+            document.getElementById('inp-kontak').value = "";
+            document.getElementById('modal-title').innerText = "Tambah Anggota";
+            document.getElementById('modal-anggota').style.display = 'flex'; 
+        }
+        function tutupModal() { document.getElementById('modal-anggota').style.display = 'none'; }
+
+        function simpanAnggota() {
+            const nama = document.getElementById('inp-nama').value;
+            const jabatan = document.getElementById('inp-jabatan').value;
+            const kontak = document.getElementById('inp-kontak').value;
+            const status = document.getElementById('inp-status').value;
+            const eid = document.getElementById('edit-id').value;
+            if(!nama) return alert("Isi nama!");
+            if(eid) {
+                const idx = jemaat.findIndex(a => a.id == eid);
+                jemaat[idx].nama = nama; jemaat[idx].jabatan = jabatan; 
+                jemaat[idx].kontak = kontak; jemaat[idx].status = status;
+            } else {
+                let absensi = {};
+                bulanArr.forEach(b => { absensi[b] = [false, false, false, false]; });
+                jemaat.push({ id: Date.now(), nama, jabatan, kontak, status, absensi: absensi });
+            }
+            simpanKeStorage(); renderAnggota(); tutupModal();
+        }
+
+        function editAnggota(id) {
+            const agt = jemaat.find(a => a.id === id);
+            document.getElementById('edit-id').value = agt.id;
+            document.getElementById('inp-nama').value = agt.nama;
+            document.getElementById('inp-jabatan').value = agt.jabatan;
+            document.getElementById('inp-kontak').value = agt.kontak;
+            document.getElementById('inp-status').value = agt.status;
+            document.getElementById('modal-title').innerText = "Edit Anggota";
+            document.getElementById('modal-anggota').style.display = 'flex';
+        }
+
+        function hapusAnggota(id) {
+            if(confirm("Hapus?")) { 
+                jemaat = jemaat.filter(a => a.id !== id); 
+                simpanKeStorage(); 
+                renderAnggota(); 
+            }
+        }
+
+        window.onload = () => { 
+            initBulanSelect();
+            renderAnggota(); 
+            renderKehadiran(); 
+            resetTimer(); 
+        };
     </script>
 </body>
 </html>
