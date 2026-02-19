@@ -45,8 +45,30 @@
             height: auto;
         }
 
+        /* BARU: ANIMASI TEKS BERWARNA & BERGERAK */
+        @keyframes rainbowText {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes textPulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(255,255,255,0.5)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 10px rgba(255,255,255,0.8)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(255,255,255,0.5)); }
+        }
+
+        .brand, .brand-footer, .footer-info h3 {
+            background: linear-gradient(90deg, #ffffff, #ffeb3b, #00e5ff, #ffffff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbowText 4s ease infinite, textPulse 2s ease-in-out infinite;
+            font-weight: 800;
+            display: inline-block;
+        }
+
         .brand {
-            font-weight: 700;
             font-size: 1.1rem;
         }
 
@@ -80,28 +102,36 @@
             font-size: 0.85rem;
         }
 
-        /* --- ANIMASI BARU (DARI ATAS KE BAWAH) --- */
+        /* --- ANIMASI DASAR --- */
         @keyframes slideInFromTop {
-            0% {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(-50px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Class untuk memicu animasi pada container utama */
         .page-animate {
             animation: slideInFromTop 0.8s ease-out forwards;
         }
 
-        /* --- ANIMASI HERO BAWAAN --- */
-        @keyframes moveUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* --- ANIMASI BERGERAK ELEMEN (FLOATING) --- */
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
         }
+
+        @keyframes pulseSoft {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        .hero h1, .hero p, .motto-hero { animation: floating 4s ease-in-out infinite; }
+        .about-image-side img { animation: floating 5s ease-in-out infinite; }
+        .about-gallery img { animation: pulseSoft 3s ease-in-out infinite; }
+        .white-box-layout { animation: floating 6s ease-in-out infinite; }
+        .card-pengurus { animation: pulseSoft 4s ease-in-out infinite; }
+        .instagram-card, .form-saran { animation: floating 5s ease-in-out infinite; }
+        .slider-container { animation: pulseSoft 6s ease-in-out infinite; }
 
         /* --- SECTION 1: HOME --- */
         .hero {
@@ -116,19 +146,20 @@
             padding: 0 10%;
         }
 
-        .hero h1 { font-size: 3.5rem; font-weight: 800; color: #fff4e1; animation: moveUp 1s ease-out forwards; }
-        .hero p { max-width: 900px; font-size: 1rem; opacity: 0; animation: moveUp 1s ease-out 0.4s forwards; }
-        .motto-hero { font-style: italic; opacity: 0; animation: moveUp 1s ease-out 0.8s forwards; }
+        .hero h1 { font-size: 3.5rem; font-weight: 800; color: #fff4e1; }
+        .hero p { max-width: 900px; font-size: 1rem; }
+        .motto-hero { font-style: italic; }
 
         .about-container { padding: 100px 8% 60px; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; }
         .about-text-side h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 20px; }
         .about-description { font-size: 0.9rem; text-align: justify; margin-bottom: 30px; line-height: 1.8; }
         .about-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px; }
         .about-gallery img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 8px; }
-        .btn-join { display: block; width: 100%; background-color: #e69500; color: #ffffff; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 700; }
+        .btn-join { display: block; width: 100%; background-color: #e69500; color: #ffffff; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 700; transition: 0.3s; }
+        .btn-join:hover { transform: scale(1.05); background-color: #cc8400; }
         .about-image-side img { width: 100%; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
 
-        /* --- GALLERY SLIDER STYLES --- */
+        /* --- GALLERY SLIDER --- */
         .gallery-section { padding: 60px 5% 80px; text-align: center; }
         .slider-container { max-width: 850px; margin: 0 auto; overflow: hidden; position: relative; border-radius: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
         .slider-wrapper { display: flex; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -151,301 +182,73 @@
         footer { background-color: #ffa500; padding: 60px 5% 20px; text-align: center; }
 
         /* --- SECTION: PROFIL --- */
-        .other-page {
-            display: none;
-            padding: 120px 0 0 0;
-            background-color: #6a8d9d; 
-            min-height: 100vh;
-        }
-
-        .profile-content-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 5% 80px 5%;
-            display: flex;
-            flex-direction: column;
-            gap: 50px;
-        }
-
-        .white-box-layout {
-            display: flex;
-            background-color: #ffffff;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            align-items: stretch;
-        }
-
+        .other-page { display: none; padding: 120px 0 0 0; background-color: #6a8d9d; min-height: 100vh; }
+        .profile-content-wrapper { max-width: 1200px; margin: 0 auto; padding: 0 5% 80px 5%; display: flex; flex-direction: column; gap: 50px; }
+        .white-box-layout { display: flex; background-color: #ffffff; border-radius: 15px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.2); align-items: stretch; }
         .box-image { flex: 1; min-height: 450px; }
         .box-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-        .box-text {
-            flex: 1.1;
-            padding: 50px;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .box-text h2 {
-            font-size: 2.2rem;
-            color: #000;
-            margin-bottom: 25px;
-            padding-left: 15px;
-            position: relative;
-            font-weight: 800;
-        }
-
-        .box-text h2::before {
-            content: "";
-            position: absolute;
-            left: 0; top: 5px; bottom: 5px; width: 5px;
-            background-color: #2b78e4;
-        }
-
-        .box-text p {
-            font-size: 1rem;
-            line-height: 1.8;
-            text-align: justify;
-            color: #444;
-            margin-bottom: 20px;
-        }
+        .box-text { flex: 1.1; padding: 50px; color: #333; display: flex; flex-direction: column; justify-content: center; }
+        .box-text h2 { font-size: 2.2rem; color: #000; margin-bottom: 25px; padding-left: 15px; position: relative; font-weight: 800; }
+        .box-text h2::before { content: ""; position: absolute; left: 0; top: 5px; bottom: 5px; width: 5px; background-color: #2b78e4; }
+        .box-text p { font-size: 1rem; line-height: 1.8; text-align: justify; color: #444; margin-bottom: 20px; }
 
         /* --- SECTION: PENGURUS --- */
-        #pengurus {
-            background-color: #6a8d9d; 
-        }
+        .pengurus-container { max-width: 1200px; margin: 0 auto; padding: 40px 5% 100px; text-align: center; }
+        .pengurus-container h1 { font-size: 2.5rem; font-weight: 800; color: #ffffff; margin-bottom: 40px; margin-top: 40px; }
+        .pengurus-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 80px; }
+        .seksi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; }
+        .card-pengurus { background-color: #ffffff; border-radius: 12px; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transition: transform 0.3s ease; height: 100%; cursor: pointer; }
+        .card-pengurus:hover { transform: translateY(-15px) !important; box-shadow: 0 20px 30px rgba(0,0,0,0.2); }
+        .avatar-circle { width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin-bottom: 20px; border: 2px solid #333; }
+        .avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+        .card-pengurus h3 { color: #000; font-weight: 700; font-size: 1.1rem; margin-bottom: 8px; line-height: 1.3; }
+        .card-pengurus p { color: #777; font-size: 0.85rem; font-weight: 500; }
 
-        .pengurus-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 5% 100px;
-            text-align: center;
-        }
-
-        .pengurus-container h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 40px;
-            margin-top: 40px;
-        }
-
-        .pengurus-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-            margin-bottom: 80px;
-        }
-
-        .seksi-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
-        }
-
-        .card-pengurus {
-            background-color: #ffffff;
-            border-radius: 12px;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-            height: 100%;
-            cursor: pointer;
-        }
-
-        .card-pengurus:hover {
-            transform: translateY(-5px);
-        }
-
-        .avatar-circle {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-bottom: 20px;
-            border: 2px solid #333;
-        }
-
-        .avatar-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .card-pengurus h3 {
-            color: #000;
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-            line-height: 1.3;
-        }
-
-        .card-pengurus p {
-            color: #777;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        /* --- MODAL STYLE (TAMBAHAN SESUAI GAMBAR) --- */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            align-items: center; justify-content: center;
-        }
-        .modal-box {
-            background: #fff;
-            width: 90%;
-            max-width: 750px;
-            border-radius: 12px;
-            display: flex;
-            padding: 30px;
-            gap: 25px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-            animation: slideInFromTop 0.4s ease-out;
-            color: #333;
-            text-align: left;
-        }
+        /* --- MODAL STYLE --- */
+        .modal-overlay { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); align-items: center; justify-content: center; }
+        .modal-box { background: #fff; width: 90%; max-width: 750px; border-radius: 12px; display: flex; padding: 30px; gap: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); animation: slideInFromTop 0.4s ease-out; color: #333; text-align: left; }
         .modal-left { flex: 1; }
-        .modal-left img {
-            width: 100%;
-            aspect-ratio: 1/1;
-            object-fit: cover;
-            border-radius: 12px;
-            border: 1px solid #ddd;
-        }
+        .modal-left img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; border: 1px solid #ddd; }
         .modal-right { flex: 1.5; display: flex; flex-direction: column; }
         .modal-right h2 { color: #002244; font-size: 2rem; font-weight: 800; margin-bottom: 5px; }
-        .modal-right .jabatan-line { 
-            font-size: 1.1rem; color: #555; 
-            border-bottom: 1px solid #eee; 
-            padding-bottom: 12px; margin-bottom: 15px; 
-        }
+        .modal-right .jabatan-line { font-size: 1.1rem; color: #555; border-bottom: 1px solid #eee; padding-bottom: 12px; margin-bottom: 15px; }
         .modal-right label { font-weight: 700; display: block; margin-top: 10px; }
         .modal-right p { font-size: 0.95rem; color: #666; margin-bottom: 20px; }
         .modal-footer-info { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid #eee; padding-top: 15px; }
         .info-item span { display: block; font-size: 0.85rem; color: #888; }
         .info-item b { font-size: 0.9rem; color: #444; }
-        .btn-close {
-            background-color: #001f3f; color: white; border: none;
-            padding: 12px; border-radius: 6px; font-weight: 700;
-            margin-top: 20px; cursor: pointer; transition: 0.3s;
-        }
+        .btn-close { background-color: #001f3f; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 700; margin-top: 20px; cursor: pointer; transition: 0.3s; }
         .btn-close:hover { background-color: #003366; }
 
-        @media (max-width: 600px) {
-            .modal-box { flex-direction: column; text-align: center; }
-            .modal-footer-info { grid-template-columns: 1fr; gap: 10px; }
-        }
+        /* --- SECTION: SOSMED & SARAN --- */
+        .social-media-container, .saran-container { max-width: 800px; margin: 0 auto; padding: 40px 5% 80px; text-align: center; }
+        .instagram-card, .form-saran { background-color: #ffffff; border-radius: 15px; padding: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); color: #333; }
+        .instagram-icon { width: 80px; height: 80px; margin-bottom: 20px; }
+        .btn-instagram { display: inline-block; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; padding: 12px 30px; border-radius: 30px; text-decoration: none; font-weight: 700; margin-top: 20px; transition: 0.3s; }
+        .btn-instagram:hover { transform: scale(1.1); }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; color: #444; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; }
+        .btn-kirim { width: 100%; background-color: #2b78e4; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-kirim:hover { background-color: #1a5bb8; }
 
-        /* --- SECTION: TENTANG (INSTAGRAM) --- */
-        #tentang {
-            background-color: #6a8d9d;
-        }
-
-        .social-media-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 5% 80px;
-            text-align: center;
-        }
-
-        .social-media-container h2.section-title {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 30px;
-        }
-
-        .instagram-card {
-            background-color: #ffffff;
-            border-radius: 15px;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            color: #333;
-        }
-
-        .instagram-icon {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 20px;
-        }
-
-        .instagram-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        .btn-instagram {
-            display: inline-block;
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            color: #ffffff;
-            padding: 12px 30px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 700;
-            margin-top: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .btn-instagram:hover {
-            transform: scale(1.05);
-        }
-
-        .profile-footer {
-            background-color: #41677d; 
-            padding: 80px 5% 40px;
-            text-align: center;
-        }
-
-        .footer-info {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 60px;
-        }
-
+        .profile-footer { background-color: #41677d; padding: 80px 5% 40px; text-align: center; }
+        .footer-info { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 60px; }
         .footer-info img { width: 60px; height: auto; }
-        .footer-info h3 { font-size: 1.8rem; font-weight: 700; }
-        .footer-info span { font-size: 0.9rem; font-style: italic; opacity: 0.9; }
-
-        .footer-bottom-line {
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            padding-top: 20px;
-            font-size: 0.8rem;
-            opacity: 0.8;
-        }
+        .footer-bottom-line { border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 20px; font-size: 0.8rem; opacity: 0.8; }
 
         .floating-mail {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background-color: #f1e4cf;
-            width: 55px; height: 55px; border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 2000;
+            position: fixed; bottom: 30px; right: 30px; background-color: #f1e4cf;
+            width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 2000;
+            animation: floating 3s ease-in-out infinite;
         }
 
-        @media (max-width: 1000px) {
-            .seksi-grid { grid-template-columns: repeat(2, 1fr); }
-            .pengurus-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 600px) {
+        @media (max-width: 1000px) { .seksi-grid, .pengurus-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { 
             .seksi-grid, .pengurus-grid { grid-template-columns: 1fr; }
+            .modal-box { flex-direction: column; text-align: center; }
+            .modal-footer-info { grid-template-columns: 1fr; gap: 10px; }
         }
     </style>
 </head>
@@ -462,6 +265,7 @@
                 <li><a onclick="showPage('profil', this)">Profil</a></li>
                 <li><a onclick="showPage('pengurus', this)">Pengurus</a></li>
                 <li><a onclick="showPage('berita', this)">Berita</a></li>
+                <li><a onclick="showPage('saran', this)">Saran</a></li>
                 <li><a onclick="showPage('tentang', this)">Tentang</a></li>
             </ul>
         </nav>
@@ -488,7 +292,7 @@
                     </div>
                     <a href="#" class="btn-join">Bergabung</a>
                 </div>
-                <div class="about-image-side"><img src="#"></div>
+                <div class="about-image-side"><img src="naposo.jpeg" alt="Naposo"></div>
             </section>
 
             <section class="gallery-section">
@@ -499,8 +303,8 @@
                         <img src="naposo1.jpeg" alt="Momen Ibadah">
                         <img src="naposo2.jpeg" alt="Kegiatan Pemuda">
                         <img src="naposo3.jpeg" alt="Persekutuan">
-                         <img src="naposo4.jpeg" alt="Persekutuan">
-                         <img src="naposo5.jpeg" alt="Persekutuan">
+                        <img src="naposo4.jpeg" alt="Persekutuan">
+                        <img src="naposo5.jpeg" alt="Persekutuan">
                     </div>
                     <button class="nav-btn prev" onclick="moveSlide(-1)">&#10094;</button>
                     <button class="nav-btn next" onclick="moveSlide(1)">&#10095;</button>
@@ -511,7 +315,7 @@
             <footer>
                 <div class="footer-logo">
                     <img src="logohkbp.png" alt="Logo HKBP" style="width: 40px; vertical-align: middle;">
-                    <span class="brand-footer" style="font-weight: 700; margin-left: 10px;">NHKBP JETUN KABIL</span>
+                    <span class="brand-footer">NHKBP JETUN KABIL</span>
                 </div>
                 <p class="copyright" style="margin-top: 20px; font-size: 0.8rem; opacity: 0.8;">© 2026 NHKBP JETUN KABIL DEVELOPED by CHRISTIANSIPAYUNG </p>
             </footer>
@@ -593,9 +397,8 @@
                         <h3>Christian Sipayung</h3>
                         <p>Seksi Musik</p>
                     </div>
-                    </div>
+                </div>
             </div>
-
             <div class="profile-footer">
                 <div class="footer-info">
                     <img src="logohkbp.png" alt="Logo HKBP">
@@ -606,12 +409,57 @@
             </div>
         </div>
 
-        <div id="berita" class="other-page" style="background-color: #ffb347;"><h2 style="text-align: center;">Berita Terbaru</h2></div>
+        <div id="berita" class="other-page" style="background-color: #f4f4f4;">
+            <div class="pengurus-container">
+                <h1 style="color: #333;">Berita Terbaru</h1>
+                <div id="news-container" class="seksi-grid">
+                    </div>
+            </div>
+            <div class="profile-footer">
+                <div class="footer-info">
+                    <img src="logohkbp.png" alt="Logo HKBP">
+                    <h3>NHKBP JETUN KABIL</h3>
+                    <span>"Masitangiangan-Masihaposan-Masiurupan"</span>
+                </div>
+                <div class="footer-bottom-line">© 2026 NHKBP JETUN KABIL DEVELOPED by CHRISTIANSIPAYUNG</div>
+            </div>
+        </div>
         
+        <div id="saran" class="other-page">
+            <div class="saran-container">
+                <h2 style="color: white; font-size: 2rem; margin-bottom: 30px; font-weight: 800;">Kotak Saran</h2>
+                <div class="form-saran">
+                    <p style="margin-bottom: 25px; color: #666; font-size: 0.9rem;">Berikan masukan atau saran Anda untuk kemajuan NHKBP JETUN KABIL yang lebih baik.</p>
+                    <form id="feedbackForm">
+                        <div class="form-group">
+                            <label>Nama Lengkap</label>
+                            <input type="text" placeholder="Masukkan nama Anda..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email / No. HP</label>
+                            <input type="text" placeholder="Masukkan kontak Anda...">
+                        </div>
+                        <div class="form-group">
+                            <label>Saran / Masukan</label>
+                            <textarea placeholder="Tuliskan saran Anda di sini..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-kirim">Kirim Saran</button>
+                    </form>
+                </div>
+            </div>
+            <div class="profile-footer">
+                <div class="footer-info">
+                    <img src="logohkbp.png" alt="Logo HKBP">
+                    <h3>NHKBP JETUN KABIL</h3>
+                    <span>"Masitangiangan-Masihaposan-Masiurupan"</span>
+                </div>
+                <div class="footer-bottom-line">© 2026 NHKBP JETUN KABIL DEVELOPED by CHRISTIANSIPAYUNG</div>
+            </div>
+        </div>
+
         <div id="tentang" class="other-page">
             <div class="social-media-container">
-                <h2 class="section-title">Sosial Media Naposo</h2>
-                
+                <h2 style="color: white; font-size: 2rem; margin-bottom: 30px; font-weight: 800;">Sosial Media Naposo</h2>
                 <div class="instagram-card">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram Icon" class="instagram-icon">
                     <h3>INSTAGRAM</h3>
@@ -619,7 +467,6 @@
                     <a href="https://www.instagram.com/naposojetun.batam?igsh=MWF3NmdpaGc2amlycw==" target="_blank" class="btn-instagram">Kunjungi Instagram</a>
                 </div>
             </div>
-
             <div class="profile-footer">
                 <div class="footer-info">
                     <img src="logohkbp.png" alt="Logo HKBP">
@@ -629,7 +476,6 @@
                 <div class="footer-bottom-line">© 2026 NHKBP JETUN KABIL DEVELOPED by CHRISTIANSIPAYUNG</div>
             </div>
         </div>
-
     </div>
 
     <div id="overlayPengurus" class="modal-overlay">
@@ -640,21 +486,18 @@
             <div class="modal-right">
                 <h2 id="mNama">Nama Pengurus</h2>
                 <div id="mJabatan" class="jabatan-line">Jabatan</div>
-                
                 <label>Deskripsi</label>
                 <p id="mDesc">Deskripsi singkat pengurus...</p>
-                
                 <div class="modal-footer-info">
                     <div class="info-item">
                         <span>Kontak</span>
-                        <b id="mKontak">082168301075</b>
+                        <b id="mKontak">-</b>
                     </div>
                     <div class="info-item">
                         <span>Tanggal Mulai</span>
-                        <b id="mTgl">8 February 2026</b>
+                        <b id="mTgl">-</b>
                     </div>
                 </div>
-                
                 <button class="btn-close" onclick="closePengurusModal()">Tutup</button>
             </div>
         </div>
@@ -665,9 +508,9 @@
     </div>
 
     <script>
+        // FUNGSI NAVIGASI
         function showPage(pageId, element) {
             const mainWrapper = document.getElementById('main-content-wrapper');
-            
             mainWrapper.classList.remove('page-animate');
             void mainWrapper.offsetWidth; 
             mainWrapper.classList.add('page-animate');
@@ -680,32 +523,58 @@
                 document.getElementById('home-content').style.display = 'block';
             } else {
                 document.getElementById(pageId).style.display = 'block';
+                // Jika membuka menu berita, jalankan pemuatan berita
+                if (pageId === 'berita') {
+                    loadNews();
+                }
             }
 
             const navLinks = document.querySelectorAll('nav a');
             navLinks.forEach(link => link.classList.remove('active-menu'));
-
-            if(element) {
-                element.classList.add('active-menu');
-            }
-
+            if(element) element.classList.add('active-menu');
             window.scrollTo(0, 0);
         }
 
-        /* DATA MODAL */
+        // FUNGSI LOAD BERITA DARI LOCALSTORAGE
+        function loadNews() {
+            const newsContainer = document.getElementById('news-container');
+            const newsList = JSON.parse(localStorage.getItem('newsList')) || [];
+
+            if (newsList.length === 0) {
+                newsContainer.innerHTML = '<p style="color: #666; grid-column: 1/-1;">Belum ada berita terbaru saat ini.</p>';
+                return;
+            }
+
+            newsContainer.innerHTML = newsList.map(item => `
+                <div class="card-pengurus" style="text-align: left; align-items: flex-start; padding: 20px;">
+                    <img src="${item.img}" style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;" onerror="this.src='https://via.placeholder.com/300x180?text=No+Image'">
+                    <span style="font-size: 0.75rem; color: #2b78e4; font-weight: bold;">${item.date}</span>
+                    <h3 style="color: #000; font-size: 1.2rem; margin: 10px 0;">${item.title}</h3>
+                    <p style="color: #555; font-size: 0.9rem; line-height: 1.5;">${item.desc}</p>
+                    <a href="#" style="margin-top: 15px; color: #ffa500; text-decoration: none; font-weight: bold; font-size: 0.85rem;">Baca Selengkapnya →</a>
+                </div>
+            `).join('');
+        }
+
+        // DATA PENGURUS
         const detailData = {
-            "David Marbun": "Ketua Naposo HKBP Jetun Kabil yang bertanggung jawab mengoordinasi seluruh kegiatan.",
-            "Daniel Sinaga": "Membantu Ketua dalam mengawasi pelaksanaan program kerja organisasi.",
-            "Santa Hutagalung": "Mengelola administrasi, surat-menyurat, dan pendataan anggota.",
-            "Christian Sipayung": "Mengatur dan melatih pelayanan musik serta kreativitas seni Naposo."
+            "David Marbun": { desc: "Ketua Naposo HKBP Jetun Kabil.", kontak: "0821-7481-8891", tgl: "11 Januari 2026" },
+            "Daniel Sinaga": { desc: "Wakil Ketua pendamping Ketua.", kontak: "0823-9150-4800", tgl: "11 Januari 2026" },
+            "Santa Hutagalung": { desc: "Sekretaris pengelola administrasi.", kontak: "0858-3553-2171", tgl: "11 Januari 2026" },
+            "Rio Marpaung": { desc: "Humas jembatan informasi.", kontak: "0821-7064-8698", tgl: "11 Januari 2026" },
+            "Maria Sihite": { desc: "Bendahara pengelola keuangan.", kontak: "0823-9150-4800", tgl: "11 Januari 2026" },
+            "Naomi": { desc: "Bagian Rohani ibadah.", kontak: "-", tgl: "11 Januari 2026" },
+            "Christian Sipayung": { desc: "Koordinator Seksi Musik.", kontak: "0858-3981-6970", tgl: "11 Januari 2026" }
         };
 
         function openPengurusModal(nama, jabatan, foto) {
+            const data = detailData[nama] || { desc: "Pengurus aktif.", kontak: "-", tgl: "-" };
             document.getElementById('mNama').innerText = nama;
             document.getElementById('mJabatan').innerText = jabatan;
             document.getElementById('mFoto').src = foto;
-            document.getElementById('mDesc').innerText = detailData[nama] || "Pengurus aktif NHKBP Jetun Kabil yang melayani dengan semangat.";
-            
+            document.getElementById('mDesc').innerText = data.desc;
+            document.getElementById('mKontak').innerText = data.kontak;
+            document.getElementById('mTgl').innerText = data.tgl;
             document.getElementById('overlayPengurus').style.display = 'flex';
         }
 
@@ -713,7 +582,7 @@
             document.getElementById('overlayPengurus').style.display = 'none';
         }
 
-        /* LOGIKA SLIDER GALERI */
+        // SLIDER GALERI
         const wrapper = document.getElementById('sliderWrapper');
         const dotsContainer = document.getElementById('dotContainer');
         const images = wrapper.querySelectorAll('img');
@@ -728,33 +597,20 @@
         });
 
         const dots = document.querySelectorAll('.dot');
-
-        function goToSlide(index) {
-            currentIndex = index;
-            wrapper.style.transform = `translateX(${-currentIndex * 100}%)`;
-            dots.forEach(dot => dot.classList.remove('active'));
-            dots[currentIndex].classList.add('active');
-        }
-
         function moveSlide(direction) {
             currentIndex += direction;
-            if (currentIndex >= images.length) currentIndex = 0;
             if (currentIndex < 0) currentIndex = images.length - 1;
-            goToSlide(currentIndex);
+            if (currentIndex >= images.length) currentIndex = 0;
+            updateSlider();
         }
-
-        setInterval(() => {
-            if (document.getElementById('home-content').style.display !== 'none') {
-                moveSlide(1);
-            }
-        }, 5000);
-
-        // Tutup modal jika klik luar box
-        window.onclick = function(event) {
-            let overlay = document.getElementById('overlayPengurus');
-            if (event.target == overlay) {
-                closePengurusModal();
-            }
+        function goToSlide(index) {
+            currentIndex = index;
+            updateSlider();
+        }
+        function updateSlider() {
+            wrapper.style.transform = `translateX(${-currentIndex * 100}%)`;
+            dots.forEach(dot => dot.classList.remove('active'));
+            if(dots[currentIndex]) dots[currentIndex].classList.add('active');
         }
     </script>
 </body>
