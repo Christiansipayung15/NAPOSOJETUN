@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Berita - NHKBP JETUN KABIL</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f4f4f4; padding: 40px 20px; color: #333; }
+        .admin-box { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        h2 { color: #ffa500; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
+        .btn-post { background: #ffa500; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
+        .btn-post:hover { background: #e69500; }
+        
+        .story-section { margin-top: 40px; }
+        .story-item { display: flex; align-items: center; justify-content: space-between; background: #fafafa; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; }
+        .story-info { display: flex; align-items: center; gap: 15px; }
+        .story-info img { width: 50px; height: 50px; object-fit: cover; border-radius: 5px; }
+        .story-text h4 { margin: 0; font-size: 14px; }
+        .story-text span { font-size: 12px; color: #888; }
+        .btn-delete { background: #ff4d4d; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; }
+        .btn-delete:hover { background: #cc0000; }
+        .nav-back { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #ffa500; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="admin-box">
+    <a href="tampilan_naposo.html" class="nav-back">← Kembali ke Website</a>
+    <h2>Post Berita Baru</h2>
+    <form id="newsForm">
+        <div class="form-group">
+            <label>Judul Berita</label>
+            <input type="text" id="newsTitle" placeholder="Judul berita..." required>
+        </div>
+        <div class="form-group">
+            <label>URL Gambar</label>
+            <input type="text" id="newsImage" placeholder="Tempel link gambar di sini..." required>
+        </div>
+        <div class="form-group">
+            <label>Isi Berita</label>
+            <textarea id="newsContent" rows="4" placeholder="Ringkasan berita..." required></textarea>
+        </div>
+        <button type="submit" class="btn-post">Posting Berita</button>
+    </form>
+
+    <div class="story-section">
+        <h2>Riwayat Berita (Story)</h2>
+        <div id="storyList">
+            </div>
+    </div>
+</div>
+
+<script>
+    // Fungsi menampilkan riwayat berita di halaman admin
+    function displayStories() {
+        const storyList = document.getElementById('storyList');
+        const newsList = JSON.parse(localStorage.getItem('newsList')) || [];
+        
+        if (newsList.length === 0) {
+            storyList.innerHTML = '<p style="color:#999; font-size:14px;">Belum ada berita yang diposting.</p>';
+            return;
+        }
+
+        storyList.innerHTML = newsList.map((item, index) => `
+            <div class="story-item">
+                <div class="story-info">
+                    <img src="${item.img}" onerror="this.src='https://via.placeholder.com/50'">
+                    <div class="story-text">
+                        <h4>${item.title}</h4>
+                        <span>${item.date}</span>
+                    </div>
+                </div>
+                <button class="btn-delete" onclick="deleteNews(${index})">Hapus</button>
+            </div>
+        `).join('');
+    }
+
+    // Fungsi Tambah Berita
+    document.getElementById('newsForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const title = document.getElementById('newsTitle').value;
+        const img = document.getElementById('newsImage').value;
+        const desc = document.getElementById('newsContent').value;
+        const date = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+
+        const newsList = JSON.parse(localStorage.getItem('newsList')) || [];
+        newsList.unshift({ title, img, desc, date });
+        localStorage.setItem('newsList', JSON.stringify(newsList));
+
+        alert('Berita berhasil diposting!');
+        this.reset();
+        displayStories();
+    });
+
+    // Fungsi Hapus Berita
+    function deleteNews(index) {
+        if (confirm('Apakah Anda yakin ingin menghapus berita ini?')) {
+            const newsList = JSON.parse(localStorage.getItem('newsList')) || [];
+            newsList.splice(index, 1);
+            localStorage.setItem('newsList', JSON.stringify(newsList));
+            displayStories();
+        }
+    }
+
+    // Jalankan saat halaman dibuka
+    displayStories();
+</script>
+
+</body>
+</html>
