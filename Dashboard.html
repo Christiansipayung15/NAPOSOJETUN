@@ -79,6 +79,11 @@
         .copyright-text { background: linear-gradient(45deg, #5d51a6, #00c0ef, #00a65a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
         .filter-bulan { padding: 8px; border-radius: 4px; border: 1px solid #ddd; outline: none; margin-left: 10px; }
+        
+        /* Gaya Khusus untuk Input Pencarian */
+        .search-container { position: relative; width: 300px; }
+        .search-container input { width: 100%; padding: 8px 35px 8px 10px; border-radius: 4px; border: 1px solid #ddd; outline: none; }
+        .search-container i { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #999; }
     </style>
 </head>
 <body>
@@ -87,7 +92,7 @@
         <div class="header-left">
             <div class="teks-gerak" style="font-size:18px;"><i class="fas fa-rocket"></i> NHKBP JETUN KABIL</div>
             <div class="user-header-profile">
-                <img src="https://via.placeholder.com/35" alt="User">
+                <img src="https://ui-avatars.com/api/?name=Admin+NHKBP" alt="User">
                 <div class="user-header-info">
                     <span class="user-header-name">ADMIN NHKBP</span><br>
                     <span class="user-header-status"><span class="dot-online"></span> Online</span>
@@ -139,18 +144,28 @@
 
         <section id="anggota" class="content-section">
             <h2>Daftar Anggota & Absensi 2026</h2>
+            
             <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                     <button class="btn btn-add" style="margin:0" onclick="bukaModal()"><i class="fas fa-plus"></i> Tambah Anggota</button>
                     <button class="btn btn-pdf" style="margin:0" onclick="ekstrakPDFAnggota()"><i class="fas fa-file-pdf"></i> PDF Bulan Ini</button>
                     <button class="btn btn-pdf" style="margin:0; background: #27ae60;" onclick="ekstrakRekapTahunan()"><i class="fas fa-file-pdf"></i> Rekap Tahunan Anggota</button>
                 </div>
-                <div>
-                    <label>Pilih Bulan Absensi: </label>
-                    <select id="select-bulan-absensi" class="filter-bulan" onchange="renderAnggota()">
-                    </select>
+                
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div class="search-container">
+                        <input type="text" id="cari-anggota" placeholder="Cari nama anggota..." onkeyup="renderAnggota()">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    
+                    <div>
+                        <label>Pilih Bulan: </label>
+                        <select id="select-bulan-absensi" class="filter-bulan" onchange="renderAnggota()">
+                        </select>
+                    </div>
                 </div>
             </div>
+
             <div class="card">
                 <table>
                     <thead>
@@ -222,11 +237,11 @@
     </div>
 
     <script>
-        // --- LOGIKA LOGOUT DAN AUTO LOGOUT (1 MENIT) ---
+        // --- LOGIKA LOGOUT DAN AUTO LOGOUT ---
         let timeout;
         function resetTimer() {
             clearTimeout(timeout);
-            timeout = setTimeout(logoutOtomatis, 60000); // 60 detik
+            timeout = setTimeout(logoutOtomatis, 300000); 
         }
 
         function konfirmasiLogout() {
@@ -236,12 +251,10 @@
         }
 
         function logoutOtomatis() {
-            alert("Sesi berakhir. Anda telah keluar.");
-            // Menghapus data sementara jika perlu, atau langsung reload ke awal
-         window.location.href = "login.html"; 
-}
+            alert("Sesi berakhir atau Anda menekan Keluar.");
+            window.location.reload(); 
+        }
 
-        // Pantau aktivitas user
         window.onmousemove = resetTimer;
         window.onmousedown = resetTimer; 
         window.onclick = resetTimer;     
@@ -252,19 +265,23 @@
         const namaAwal = ["Adelio Pakpahan", "Aderman Purba", "Christian Sipayung", "Christine Hutagalung", "David Marbun", "David Silitonga", "Demetrio Marpaung", "Felix Manalu", "Indro Sipayung", "Juardiansyah Siagian", "Julia Sibarani", "Rizki Aritonang", "Samuel Gultom", "Santha Hutagalung", "Sara Sihombing", "Sondang Pasaribu", "Wira Tambunan", "Wulan Harianja", "Angel Simbolon", "Christine Simbolon", "Feby Ambarita", "Flora Aruan", "Gita Hutagalung", "Rona Harianja", "Sartika Matondang", "Tika Marbun", "Agnes Panggabean", "Daniel Sinaga", "Dendy Marbun", "Ferdi Simatupang", "Hanani Manurung", "Hezkiel Panjaitan", "Jenni Sihombing", "Kesya Sihite", "Maria Sihite", "Mcleod Lumbangaol", "Naomi Silitonga", "Rossy Samosir", "Yolanda Sijabat", "Yolanda Sitorus"];
         const bulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-        // Memuat data dari local storage atau menggunakan data awal
-        let jemaat = JSON.parse(localStorage.getItem('dataJemaat')) || namaAwal.map((n, i) => {
-            let absensi = {};
-            bulanArr.forEach(b => { absensi[b] = [false, false, false, false]; });
-            return { 
-                id: i+1, 
-                nama: n, 
-                jabatan: "Anggota", 
-                kontak: "-", 
-                status: i < 26 ? "AKTIF" : "TIDAK AKTIF",
-                absensi: absensi
-            };
-        });
+        let jemaat = JSON.parse(localStorage.getItem('dataJemaat'));
+
+        if (!jemaat) {
+            jemaat = namaAwal.map((n, i) => {
+                let absensi = {};
+                bulanArr.forEach(b => { absensi[b] = [false, false, false, false]; });
+                return { 
+                    id: i + 1, 
+                    nama: n, 
+                    jabatan: "Anggota", 
+                    kontak: "-", 
+                    status: i < 26 ? "AKTIF" : "TIDAK AKTIF",
+                    absensi: absensi
+                };
+            });
+            localStorage.setItem('dataJemaat', JSON.stringify(jemaat));
+        }
 
         let rekapManual = JSON.parse(localStorage.getItem('dataRekap')) || Array(12).fill(null).map(() => [0, 0, 0, 0]);
 
@@ -288,23 +305,31 @@
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.sidebar-menu li').forEach(l => l.classList.remove('active'));
             el.classList.add('active');
+            if(id === 'kehadiran') renderKehadiran();
         }
 
         function toggleAbsen(jemaatId, bulan, mingguIdx) {
-            const index = jemaat.findIndex(j => j.id === jemaatId);
+            const index = jemaat.findIndex(j => j.id == jemaatId);
             if (index !== -1) {
                 jemaat[index].absensi[bulan][mingguIdx] = !jemaat[index].absensi[bulan][mingguIdx];
                 simpanKeStorage();
             }
         }
 
+        // --- FUNGSI RENDER DENGAN PENCARIAN ---
         function renderAnggota() {
             const tbody = document.getElementById('body-anggota');
             const bulanDipilih = document.getElementById('select-bulan-absensi').value;
+            const keyword = document.getElementById('cari-anggota').value.toLowerCase(); // Ambil kata kunci pencarian
+            
             document.getElementById('label-bulan-tabel').innerText = "Bulan " + bulanDipilih;
             
             tbody.innerHTML = "";
-            jemaat.forEach((item, i) => {
+            
+            // Filter data jemaat berdasarkan keyword pencarian
+            const jemaatFiltered = jemaat.filter(item => item.nama.toLowerCase().includes(keyword));
+
+            jemaatFiltered.forEach((item, i) => {
                 const abs = item.absensi[bulanDipilih];
                 tbody.innerHTML += `<tr>
                     <td>${i + 1}</td>
@@ -332,16 +357,16 @@
                 const total = row[0] + row[1] + row[2] + row[3];
                 tbody.innerHTML += `<tr>
                     <td style="text-align:left"><strong>${bul}</strong></td>
-                    <td><input type="number" class="input-manual" value="${row[0]}" oninput="updateKehadiran(${idx},0,this.value)"></td>
-                    <td><input type="number" class="input-manual" value="${row[1]}" oninput="updateKehadiran(${idx},1,this.value)"></td>
-                    <td><input type="number" class="input-manual" value="${row[2]}" oninput="updateKehadiran(${idx},2,this.value)"></td>
-                    <td><input type="number" class="input-manual" value="${row[3]}" oninput="updateKehadiran(${idx},3,this.value)"></td>
+                    <td><input type="number" class="input-manual" value="${row[0]}" oninput="updateKehadiranManual(${idx},0,this.value)"></td>
+                    <td><input type="number" class="input-manual" value="${row[1]}" oninput="updateKehadiranManual(${idx},1,this.value)"></td>
+                    <td><input type="number" class="input-manual" value="${row[2]}" oninput="updateKehadiranManual(${idx},2,this.value)"></td>
+                    <td><input type="number" class="input-manual" value="${row[3]}" oninput="updateKehadiranManual(${idx},3,this.value)"></td>
                     <td id="tot-${idx}" style="font-weight:bold; background:#f0f4f8;">${total}</td>
                 </tr>`;
             });
         }
 
-        function updateKehadiran(bIdx, mIdx, val) {
+        function updateKehadiranManual(bIdx, mIdx, val) {
             rekapManual[bIdx][mIdx] = parseInt(val) || 0;
             simpanKeStorage();
             const total = rekapManual[bIdx][0] + rekapManual[bIdx][1] + rekapManual[bIdx][2] + rekapManual[bIdx][3];
@@ -446,20 +471,32 @@
             const status = document.getElementById('inp-status').value;
             const eid = document.getElementById('edit-id').value;
             if(!nama) return alert("Isi nama!");
+            
             if(eid) {
                 const idx = jemaat.findIndex(a => a.id == eid);
-                jemaat[idx].nama = nama; jemaat[idx].jabatan = jabatan; 
-                jemaat[idx].kontak = kontak; jemaat[idx].status = status;
+                jemaat[idx].nama = nama; 
+                jemaat[idx].jabatan = jabatan; 
+                jemaat[idx].kontak = kontak; 
+                jemaat[idx].status = status;
             } else {
                 let absensi = {};
                 bulanArr.forEach(b => { absensi[b] = [false, false, false, false]; });
-                jemaat.push({ id: Date.now(), nama, jabatan, kontak, status, absensi: absensi });
+                jemaat.push({ 
+                    id: Date.now(), 
+                    nama, 
+                    jabatan, 
+                    kontak, 
+                    status, 
+                    absensi: absensi 
+                });
             }
-            simpanKeStorage(); renderAnggota(); tutupModal();
+            simpanKeStorage(); 
+            renderAnggota(); 
+            tutupModal();
         }
 
         function editAnggota(id) {
-            const agt = jemaat.find(a => a.id === id);
+            const agt = jemaat.find(a => a.id == id);
             document.getElementById('edit-id').value = agt.id;
             document.getElementById('inp-nama').value = agt.nama;
             document.getElementById('inp-jabatan').value = agt.jabatan;
@@ -470,8 +507,8 @@
         }
 
         function hapusAnggota(id) {
-            if(confirm("Hapus?")) { 
-                jemaat = jemaat.filter(a => a.id !== id); 
+            if(confirm("Hapus data anggota ini secara permanen?")) { 
+                jemaat = jemaat.filter(a => a.id != id); 
                 simpanKeStorage(); 
                 renderAnggota(); 
             }
