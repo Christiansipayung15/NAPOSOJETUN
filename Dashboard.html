@@ -60,7 +60,7 @@
         table th { background: #f8f9fa; padding: 12px; border: 1px solid #dee2e6; font-size: 13px; }
         table td { padding: 10px; border: 1px solid #eee; text-align: center; }
 
-        .input-manual { width: 60px; padding: 5px; text-align: center; border: 1px solid #ddd; border-radius: 4px; font-weight: bold; }
+        .input-manual { width: 90%; padding: 5px; text-align: center; border: 1px solid #ddd; border-radius: 4px; font-weight: bold; }
         .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; color: white; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
         .btn-add { background: var(--primary); margin-bottom: 15px; }
         .btn-pdf { background: #e74c3c; margin-bottom: 15px; } 
@@ -80,10 +80,13 @@
         
         .filter-bulan { padding: 8px; border-radius: 4px; border: 1px solid #ddd; outline: none; margin-left: 10px; }
         
-        /* Gaya Khusus untuk Input Pencarian */
         .search-container { position: relative; width: 300px; }
         .search-container input { width: 100%; padding: 8px 35px 8px 10px; border-radius: 4px; border: 1px solid #ddd; outline: none; }
         .search-container i { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #999; }
+
+        /* Khusus tabel keuangan */
+        .text-right { text-align: right; }
+        .bg-total { background-color: #f1f1f1; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -107,6 +110,7 @@
             <li class="active" onclick="showSection('dashboard', this)"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
             <li onclick="showSection('anggota', this)"><i class="fas fa-users"></i> Nama Anggota</li>
             <li onclick="showSection('kehadiran', this)"><i class="fas fa-calendar-check"></i> Kehadiran</li>
+            <li onclick="showSection('keuangan', this)"><i class="fas fa-wallet"></i> Laporan Keuangan</li>
         </ul>
     </nav>
 
@@ -129,10 +133,10 @@
                     </div>
                 </div>
                 <div class="info-box">
-                    <span class="info-box-icon" style="background-color: var(--danger);"><i class="fas fa-times-circle"></i></span>
+                    <span class="info-box-icon" style="background-color: var(--warning);"><i class="fas fa-money-bill-wave"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">Tidak Aktif</span>
-                        <span id="dash-tidak" class="info-box-number">0</span>
+                        <span class="info-box-text">Total Kas (Tahun)</span>
+                        <span id="dash-kas" class="info-box-number">Rp 0</span>
                     </div>
                 </div>
             </div>
@@ -204,6 +208,34 @@
             </div>
         </section>
 
+        <section id="keuangan" class="content-section">
+            <h2>Laporan Keuangan 2026</h2>
+            <button class="btn btn-pdf" style="background:#27ae60" onclick="ekstrakPDFKeuangan()"><i class="fas fa-file-pdf"></i> Ekstrak Laporan Keuangan</button>
+            
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="text-align:left">Bulan</th>
+                            <th colspan="2">MINGGU 1</th>
+                            <th colspan="2">MINGGU 2</th>
+                            <th colspan="2">MINGGU 3</th>
+                            <th colspan="2">MINGGU 4</th>
+                            <th rowspan="2" style="background:#eee">TOTAL KAS</th>
+                            <th rowspan="2" style="background:#eee">TOTAL GEREJA</th>
+                        </tr>
+                        <tr>
+                            <th>KAS</th><th>GEREJA</th>
+                            <th>KAS</th><th>GEREJA</th>
+                            <th>KAS</th><th>GEREJA</th>
+                            <th>KAS</th><th>GEREJA</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-keuangan"></tbody>
+                </table>
+            </div>
+        </section>
+
         <footer class="footer-copyright">
             <span class="copyright-text">&copy; 2026 NHKBP JETUN KABIL DEVELOPER by CHRISTIAN SIPAYUNG</span>
         </footer>
@@ -252,7 +284,7 @@
 
         function logoutOtomatis() {
             alert("Sesi berakhir atau Anda menekan Keluar.");
-            window.location.reload(); 
+          window.location.href = "login.html";
         }
 
         window.onmousemove = resetTimer;
@@ -284,10 +316,14 @@
         }
 
         let rekapManual = JSON.parse(localStorage.getItem('dataRekap')) || Array(12).fill(null).map(() => [0, 0, 0, 0]);
+        
+        // Data Keuangan: Array 12 Bulan, tiap bulan punya [[kas1, ger1], [kas2, ger2], [kas3, ger3], [kas4, ger4]]
+        let dataKeuangan = JSON.parse(localStorage.getItem('dataKeuangan')) || Array(12).fill(null).map(() => [[0,0], [0,0], [0,0], [0,0]]);
 
         function simpanKeStorage() {
             localStorage.setItem('dataJemaat', JSON.stringify(jemaat));
             localStorage.setItem('dataRekap', JSON.stringify(rekapManual));
+            localStorage.setItem('dataKeuangan', JSON.stringify(dataKeuangan));
         }
 
         function initBulanSelect() {
@@ -306,27 +342,22 @@
             document.querySelectorAll('.sidebar-menu li').forEach(l => l.classList.remove('active'));
             el.classList.add('active');
             if(id === 'kehadiran') renderKehadiran();
+            if(id === 'keuangan') renderKeuangan();
+            updateDashboard();
         }
 
-        function toggleAbsen(jemaatId, bulan, mingguIdx) {
-            const index = jemaat.findIndex(j => j.id == jemaatId);
-            if (index !== -1) {
-                jemaat[index].absensi[bulan][mingguIdx] = !jemaat[index].absensi[bulan][mingguIdx];
-                simpanKeStorage();
-            }
+        function formatRupiah(angka) {
+            return "Rp " + angka.toLocaleString('id-ID');
         }
 
-        // --- FUNGSI RENDER DENGAN PENCARIAN ---
+        // --- RENDER ANGGOTA ---
         function renderAnggota() {
             const tbody = document.getElementById('body-anggota');
             const bulanDipilih = document.getElementById('select-bulan-absensi').value;
-            const keyword = document.getElementById('cari-anggota').value.toLowerCase(); // Ambil kata kunci pencarian
+            const keyword = document.getElementById('cari-anggota').value.toLowerCase();
             
             document.getElementById('label-bulan-tabel').innerText = "Bulan " + bulanDipilih;
-            
             tbody.innerHTML = "";
-            
-            // Filter data jemaat berdasarkan keyword pencarian
             const jemaatFiltered = jemaat.filter(item => item.nama.toLowerCase().includes(keyword));
 
             jemaatFiltered.forEach((item, i) => {
@@ -349,6 +380,15 @@
             updateDashboard();
         }
 
+        function toggleAbsen(jemaatId, bulan, mingguIdx) {
+            const index = jemaat.findIndex(j => j.id == jemaatId);
+            if (index !== -1) {
+                jemaat[index].absensi[bulan][mingguIdx] = !jemaat[index].absensi[bulan][mingguIdx];
+                simpanKeStorage();
+            }
+        }
+
+        // --- RENDER KEHADIRAN ---
         function renderKehadiran() {
             const tbody = document.getElementById('body-kehadiran');
             tbody.innerHTML = "";
@@ -373,17 +413,55 @@
             document.getElementById(`tot-${bIdx}`).innerText = total;
         }
 
+        // --- RENDER KEUANGAN (NEW) ---
+        function renderKeuangan() {
+            const tbody = document.getElementById('body-keuangan');
+            tbody.innerHTML = "";
+            bulanArr.forEach((bul, bIdx) => {
+                const minggu = dataKeuangan[bIdx];
+                const totalKas = minggu[0][0] + minggu[1][0] + minggu[2][0] + minggu[3][0];
+                const totalGer = minggu[0][1] + minggu[1][1] + minggu[2][1] + minggu[3][1];
+                
+                tbody.innerHTML += `<tr>
+                    <td style="text-align:left"><strong>${bul}</strong></td>
+                    <td><input type="number" class="input-manual" value="${minggu[0][0]}" oninput="updateKeuanganManual(${bIdx},0,0,this.value)"></td>
+                    <td><input type="number" class="input-manual" value="${minggu[0][1]}" oninput="updateKeuanganManual(${bIdx},0,1,this.value)"></td>
+                    <td><input type="number" class="input-manual" value="${minggu[1][0]}" oninput="updateKeuanganManual(${bIdx},1,0,this.value)"></td>
+                    <td><input type="number" class="input-manual" value="${minggu[1][1]}" oninput="updateKeuanganManual(${bIdx},1,1,this.value)"></td>
+                    <td><input type="number" class="input-manual" value="${minggu[2][0]}" oninput="updateKeuanganManual(${bIdx},2,0,this.value)"></td>
+                    <td><input type="number" class="input-manual" value="${minggu[2][1]}" oninput="updateKeuanganManual(${bIdx},2,1,this.value)"></td>
+                    <td><input type="number" class="input-manual" value="${minggu[3][0]}" oninput="updateKeuanganManual(${bIdx},3,0,this.value)"></td>
+                    <td><input type="number" class="input-manual" value="${minggu[3][1]}" oninput="updateKeuanganManual(${bIdx},3,1,this.value)"></td>
+                    <td id="tkas-${bIdx}" style="font-weight:bold; background:#e8f4fd;">${formatRupiah(totalKas)}</td>
+                    <td id="tger-${bIdx}" style="font-weight:bold; background:#e8fdf5;">${formatRupiah(totalGer)}</td>
+                </tr>`;
+            });
+        }
+
+        function updateKeuanganManual(bIdx, mIdx, tipeIdx, val) {
+            dataKeuangan[bIdx][mIdx][tipeIdx] = parseInt(val) || 0;
+            simpanKeStorage();
+            const minggu = dataKeuangan[bIdx];
+            const totalKas = minggu[0][0] + minggu[1][0] + minggu[2][0] + minggu[3][0];
+            const totalGer = minggu[0][1] + minggu[1][1] + minggu[2][1] + minggu[3][1];
+            document.getElementById(`tkas-${bIdx}`).innerText = formatRupiah(totalKas);
+            document.getElementById(`tger-${bIdx}`).innerText = formatRupiah(totalGer);
+            updateDashboard();
+        }
+
         function updateDashboard() {
             document.getElementById('dash-total').innerText = jemaat.length;
             document.getElementById('dash-aktif').innerText = jemaat.filter(a => a.status === 'AKTIF').length;
-            document.getElementById('dash-tidak').innerText = jemaat.filter(a => a.status !== 'AKTIF').length;
+            
+            let totalKasTahun = 0;
+            dataKeuangan.forEach(b => b.forEach(m => totalKasTahun += m[0]));
+            document.getElementById('dash-kas').innerText = formatRupiah(totalKasTahun);
         }
 
         // --- PDF FUNCTIONS ---
         function ekstrakPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            doc.setFontSize(16);
             doc.text("LAPORAN REKAP KEHADIRAN NHKBP JETUN KABIL", 105, 15, { align: "center" });
             const bodyData = bulanArr.map((bul, idx) => {
                 const row = rekapManual[idx];
@@ -399,11 +477,36 @@
             doc.save("Rekap_Kehadiran_NHKBP_2026.pdf");
         }
 
+        function ekstrakPDFKeuangan() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a4');
+            doc.text("LAPORAN KEUANGAN KAS & GEREJA NHKBP JETUN KABIL 2026", 148, 15, { align: "center" });
+            const bodyData = bulanArr.map((bul, bIdx) => {
+                const m = dataKeuangan[bIdx];
+                return [
+                    bul, 
+                    m[0][0], m[0][1], 
+                    m[1][0], m[1][1], 
+                    m[2][0], m[2][1], 
+                    m[3][0], m[3][1], 
+                    (m[0][0]+m[1][0]+m[2][0]+m[3][0]), 
+                    (m[0][1]+m[1][1]+m[2][1]+m[3][1])
+                ];
+            });
+            doc.autoTable({
+                startY: 30,
+                head: [['Bulan', 'K1', 'G1', 'K2', 'G2', 'K3', 'G3', 'K4', 'G4', 'Total Kas', 'Total Gereja']],
+                body: bodyData,
+                theme: 'grid',
+                headStyles: { fillColor: [93, 81, 166] }
+            });
+            doc.save("Laporan_Keuangan_NHKBP_2026.pdf");
+        }
+
         function ekstrakPDFAnggota() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('l', 'mm', 'a4');
             const bulanDipilih = document.getElementById('select-bulan-absensi').value;
-            doc.setFontSize(16);
             doc.text("DAFTAR ANGGOTA & ABSENSI NHKBP JETUN KABIL - " + bulanDipilih, 148, 15, { align: "center" });
             const bodyData = jemaat.map((item, idx) => {
                 const abs = item.absensi[bulanDipilih];
@@ -422,7 +525,6 @@
         function ekstrakRekapTahunan() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('l', 'mm', [297, 420]);
-            doc.setFontSize(18);
             doc.text("REKAPITULASI KEHADIRAN ANGGOTA NHKBP JETUN KABIL 2026", 210, 15, { align: "center" });
             let head1 = ['No', 'Nama Naposo'];
             let head2 = ['', ''];
@@ -518,6 +620,8 @@
             initBulanSelect();
             renderAnggota(); 
             renderKehadiran(); 
+            renderKeuangan();
+            updateDashboard();
             resetTimer(); 
         };
     </script>
